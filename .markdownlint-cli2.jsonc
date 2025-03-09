@@ -1,0 +1,45 @@
+{
+  "$schema": "https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/main/schema/markdownlint-cli2-config-schema.json",
+
+  "config": {
+    // Default state for all rules
+    "default": true,
+
+    // MD013/line-length : Line length
+    // Disabled due to conflict with textlint
+    "MD013": false,
+
+    // MD014/commands-show-output : Dollar signs used before commands without showing output
+    "MD014": false,
+
+    // MD024/no-duplicate-heading : Multiple headings with the same content
+    "MD024": {
+      "siblings_only": true
+    },
+
+    // MD033/no-inline-html : Inline HTML
+    "MD033": {
+      // Allowed elements.
+      "allowed_elements": ["br"]
+    }
+  },
+
+  // Glob expressions to include when linting
+  "globs": ["docs/**/*.md"],
+
+  // Glob expressions to ignore when linting
+  "ignores": ["node_modules/**"],
+
+  // Whether to disable the display of the banner message and version numbers on stdout
+  "noBanner": true,
+
+  // Whether to disable the display of progress on stdout
+  "noProgress": true,
+
+  // "Whether to show the list of found files on stdout
+  "showFound": false,
+
+  "outputFormatters": [
+    ["markdownlint-cli2-formatter-pretty", { "appendLink": true }]
+  ]
+}

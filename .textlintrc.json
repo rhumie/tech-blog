@@ -1,0 +1,63 @@
+{
+  "plugins": {},
+  "filters": {},
+  "rules": {
+    "ja-unnatural-alphabet": true,
+    "preset-ja-spacing": {
+      "ja-nakaguro-or-halfwidth-space-between-katakana": true,
+      "ja-no-space-around-parentheses": true,
+      "ja-no-space-between-full-width": true,
+      "ja-space-between-half-and-full-width": {
+        "space": ["alphabets"]
+      },
+      "ja-space-after-exclamation": true,
+      "ja-space-after-question": true,
+      "ja-space-around-code": {
+        "before": true,
+        "after": true
+      },
+      "ja-space-around-link": {
+        "before": true,
+        "after": true
+      }
+    },
+    "preset-ja-technical-writing": {
+      "no-mix-dearu-desumasu": {
+        "preferInHeader": "",
+        "preferInBody": "ですます",
+        "preferInList": "",
+        "strict": false
+      },
+      "no-exclamation-question-mark": {
+        "allowHalfWidthExclamation": true,
+        "allowHalfWidthQuestion": true
+      },
+      "max-comma": {
+        "max": 5
+      },
+      "max-kanji-continuous-len": {
+        "max": 12
+      },
+      "sentence-length": {
+        "max": 200
+      },
+      "ja-no-redundant-expression": {
+        "dictOptions": {
+          "dict5": {
+            "allows": [
+              "/^選定を行[ぁ-ん]/",
+              "/^設定を行[ぁ-ん]/",
+              "/^処理を行[ぁ-ん]/",
+              "/^認証を行[ぁ-ん]/",
+              "/^[ァ-ヶ]+を.?行[ぁ-ん]/",
+              "/^[a-zA-Z]+を.?行[ぁ-ん]/"
+            ]
+          }
+        }
+      }
+    },
+    "prh": {
+      "rulePaths": [".textlintprh.yaml"]
+    }
+  }
+}

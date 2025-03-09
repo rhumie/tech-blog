@@ -1,0 +1,17 @@
+{
+  "name": "tech-blog",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "author": "",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "markdownlint-cli2": "^0.16.0",
+    "markdownlint-cli2-formatter-pretty": "^0.0.7",
+    "textlint": "^14.4.0",
+    "textlint-rule-ja-unnatural-alphabet": "^2.0.1",
+    "textlint-rule-preset-ja-spacing": "^2.4.3",
+    "textlint-rule-preset-ja-technical-writing": "^10.0.1",
+    "textlint-rule-prh": "^6.0.0"
+  }
+}
