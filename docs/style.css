@@ -1,0 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@400;500;700&display=swap");
+
+:root {
+  --font-body: "M PLUS 1", "Hiragino Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-code: "M PLUS 1 Code", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+body {
+  font-family: var(--font-body);
+}
+
+code,
+pre {
+  font-family: var(--font-code);
+}

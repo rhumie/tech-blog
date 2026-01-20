@@ -5,6 +5,14 @@ imports:
 
 rules:
   # Overwrite existing rules
+  - expected: インタフェース
+  - expected: インターフェース
+    pattern: /インタフェイス|インターフェイス|インタフェース|インターフェィス/
+
+  - expected: 作$1
+  - expected: つく$1
+    pattern: /作([らりるれろっ])/
+
   - expected: 始め
   - expected: はじめに
     pattern: 始めに
@@ -16,3 +24,23 @@ rules:
   - expected: ユーザー$1
   - expected: ユーザ
     pattern: ユーザー
+
+  - expected: LINE
+    pattern: \bLINE\b
+
+  - expected: 終わ$1
+  - expected: おわ$1
+    pattern: /終([らりるれろっ])/
+
+  - expected: 終わ$1
+  - expected: おわ$1
+    pattern: /終わ([らりるれろっ][^か])/
+
+  - pattern: /([^排人の])他([^ァ-ヶ社者人方])/
+    expected: $1ほか$2
+
+  - expected: $1ている
+    pattern: /([^捨当立持])てる/
+
+  - expected: 戻$1
+    pattern: /もど([^ちこ])/

@@ -2,6 +2,7 @@
   "plugins": {},
   "filters": {},
   "rules": {
+    "@textlint-ja/preset-ai-writing": true,
     "ja-unnatural-alphabet": true,
     "preset-ja-spacing": {
       "ja-nakaguro-or-halfwidth-space-between-katakana": true,
@@ -32,6 +33,7 @@
         "allowHalfWidthExclamation": true,
         "allowHalfWidthQuestion": true
       },
+      "ja-no-weak-phrase": false,
       "max-comma": {
         "max": 5
       },

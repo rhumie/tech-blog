@@ -21,6 +21,12 @@
     "MD033": {
       // Allowed elements.
       "allowed_elements": ["br"]
+    },
+
+    // MD010/no-hard-tabs : Hard tabs
+    // Allow tabs in code blocks (e.g., Go code formatted with tabs).
+    "MD010": {
+      "code_blocks": false
     }
   },
 

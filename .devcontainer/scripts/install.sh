@@ -12,6 +12,7 @@ sudo chown vscode:vscode node_modules
 
 # Install npm dependencies.
 npm install -g npm
+npm install -g docsify-cli
 npm install
 
 # Set aliases
