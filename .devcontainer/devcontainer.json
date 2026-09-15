@@ -1,0 +1,57 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/debian
+{
+  "name": "Debian",
+  // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+  "image": "mcr.microsoft.com/devcontainers/base:trixie",
+
+  // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": 24
+    },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
+  },
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+  "forwardPorts": [3000, 35729],
+
+  "mounts": [
+    "type=volume,source=claude-code-config,target=/home/vscode/.claude"
+  ],
+
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "git.enableCommitSigning": true,
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "markdown.preview.breaks": true,
+        "workbench.editorAssociations": {
+          "*.drawio.png": "hediet.vscode-drawio"
+        },
+        "hediet.vscode-drawio.offline": false,
+        "hediet.vscode-drawio.theme": "kennedy"
+      },
+      "extensions": [
+        "EditorConfig.EditorConfig",
+        "esbenp.prettier-vscode",
+        "DavidAnson.vscode-markdownlint",
+        "3w36zj6.textlint",
+        "streetsidesoftware.code-spell-checker",
+        "hediet.vscode-drawio"
+      ]
+    }
+  },
+
+  // A command to run when creating the container. This command is run after "initializeCommand" and before "updateContentCommand".
+  "onCreateCommand": "/bin/bash .devcontainer/scripts/install.sh",
+
+  // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+  // "remoteUser": "root"
+
+  "containerEnv": {
+    "CLAUDE_CONFIG_DIR": "/home/vscode/.claude"
+  }
+}

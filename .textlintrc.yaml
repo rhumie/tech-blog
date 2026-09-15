@@ -1,0 +1,74 @@
+# textlint Settings
+#
+# textlint reads this file via rc-config-loader, which probes extensions in the
+# order .json -> .yaml -> .yml -> .js -> .cjs. Do not add a .textlintrc.json
+# alongside this file; it would silently take precedence.
+
+plugins: {}
+
+filters: {}
+
+rules:
+  # Detect phrasing that reads as AI-generated.
+  "@textlint-ja/preset-ai-writing": true
+
+  # Detect unnatural half-width / full-width alphabet usage.
+  ja-unnatural-alphabet: true
+
+  preset-ja-spacing:
+    ja-nakaguro-or-halfwidth-space-between-katakana: true
+    ja-no-space-around-parentheses: true
+    ja-no-space-between-full-width: true
+    ja-space-between-half-and-full-width:
+      # Space out alphabets only, so that numbers stay tight against kana.
+      space:
+        - alphabets
+    ja-space-after-exclamation: true
+    ja-space-after-question: true
+    ja-space-around-code:
+      before: true
+      after: true
+    ja-space-around-link:
+      before: true
+      after: true
+
+  preset-ja-technical-writing:
+    no-mix-dearu-desumasu:
+      # Body text is "ですます"; headings and lists are left unconstrained.
+      preferInHeader: ""
+      preferInBody: ですます
+      preferInList: ""
+      strict: false
+
+    no-exclamation-question-mark:
+      # Half-width ! and ? are allowed; full-width ones are still reported.
+      allowHalfWidthExclamation: true
+      allowHalfWidthQuestion: true
+
+    # Allow hedging expressions such as "〜と思います".
+    ja-no-weak-phrase: false
+
+    # Relaxed from the rule defaults (4 / 5 / 100 respectively).
+    max-comma:
+      max: 5
+    max-kanji-continuous-len:
+      max: 12
+    sentence-length:
+      max: 200
+
+    ja-no-redundant-expression:
+      dictOptions:
+        # dict5 flags "〜を行う" as redundant. Exempt the cases where the
+        # alternative ("〜する") is awkward or not a real word.
+        dict5:
+          allows:
+            - "/^選定を行[ぁ-ん]/"
+            - "/^設定を行[ぁ-ん]/"
+            - "/^処理を行[ぁ-ん]/"
+            - "/^認証を行[ぁ-ん]/"
+            - "/^[ァ-ヶ]+を.?行[ぁ-ん]/"
+            - "/^[a-zA-Z]+を.?行[ぁ-ん]/"
+
+  prh:
+    rulePaths:
+      - .textlintprh.yaml

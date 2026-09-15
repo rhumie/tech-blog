@@ -1,0 +1,21 @@
+@font-face {
+  font-family: "SmartFontUI";
+  src: url("fonts/SmartFontUI.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-family: "SmartFontUI", "Hiragino Sans", "Helvetica Neue", Arial, sans-serif;
+  --link-color: var(--theme-color);
+}
+
+.markdown-section a:not(.button) {
+  text-decoration-line: none;
+
+  &:hover,
+  &:focus-visible {
+    text-decoration-line: underline;
+  }
+}
