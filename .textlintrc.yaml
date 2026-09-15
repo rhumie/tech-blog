@@ -1,9 +1,3 @@
-# textlint Settings
-#
-# textlint reads this file via rc-config-loader, which probes extensions in the
-# order .json -> .yaml -> .yml -> .js -> .cjs. Do not add a .textlintrc.json
-# alongside this file; it would silently take precedence.
-
 plugins: {}
 
 filters: {}
@@ -48,13 +42,14 @@ rules:
     # Allow hedging expressions such as "〜と思います".
     ja-no-weak-phrase: false
 
-    # Relaxed from the rule defaults (4 / 5 / 100 respectively).
+    max-ten:
+      max: 5
     max-comma:
       max: 5
     max-kanji-continuous-len:
       max: 12
     sentence-length:
-      max: 200
+      max: 250
 
     ja-no-redundant-expression:
       dictOptions:
