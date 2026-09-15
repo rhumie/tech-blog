@@ -1,3 +1,11 @@
-.claude
+.claude/*
+!.claude/settings.json
+!.claude/commands/
+!.claude/agents/
+!.claude/skills/
+!.claude/hooks/
+!.claude/rules/
+!.claude/.gitkeep
+
 node_modules
 

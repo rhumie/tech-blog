@@ -1,0 +1,21 @@
+{
+  "includeCoAuthoredBy": false,
+  "enabledPlugins": {
+    "example-skills@anthropic-agent-skills": true,
+    "natural-japanese@natural-japanese": true
+  },
+  "extraKnownMarketplaces": {
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    },
+    "natural-japanese": {
+      "source": {
+        "source": "github",
+        "repo": "coji/natural-japanese"
+      }
+    }
+  }
+}
