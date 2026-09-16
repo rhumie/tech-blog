@@ -1,0 +1,3 @@
+# Pins the JDK for this repository. SDKMAN activates it on entering the
+# directory, and a subdirectory can override it with its own .sdkmanrc.
+java=27.0.0-amzn

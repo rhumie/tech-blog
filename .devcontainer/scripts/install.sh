@@ -19,5 +19,9 @@ npm install
 # Install uv.
 curl -LsSf https://astral.sh/uv/0.12.15/install.sh | sh
 
+# Enable SDKMAN's per-directory switching, so that entering a directory that
+# holds a .sdkmanrc activates the JDK pinned there.
+sed -i "s/^sdkman_auto_env=.*/sdkman_auto_env=true/" "$SDKMAN_DIR/etc/config"
+
 # Set aliases
 echo "alias ll=\"ls -l\"" >> "$HOME/.bash_aliases"

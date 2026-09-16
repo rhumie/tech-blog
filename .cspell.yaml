@@ -8,6 +8,7 @@ language: en
 
 # words - list of words to be always considered correct
 words:
+  - amzn
   - apimachinery
   - benchmem
   - docsify
@@ -25,6 +26,8 @@ words:
   - Norming
   - pprof
   - reviewdog
+  - sdkman
+  - sdkmanrc
   - SSKDs
   - textlint
   - womens
