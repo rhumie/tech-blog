@@ -42,6 +42,10 @@ rules:
     # Allow hedging expressions such as "〜と思います".
     ja-no-weak-phrase: false
 
+    # The "が" counter cannot tell the adversative conjunction from quoted
+    # phrases or the case particle, so it mostly reports false positives.
+    no-doubled-conjunctive-particle-ga: false
+
     max-ten:
       max: 5
     max-comma:

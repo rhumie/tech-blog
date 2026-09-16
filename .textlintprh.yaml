@@ -17,9 +17,6 @@
 version: 1
 
 rules:
-  # LOCAL: reversed. Upstream prefers 作る; we prefer the kana つくる.
-  - expected: つく$1
-    pattern: /作([らりるれろっ])/
   - expected: 結び付
     pattern:
       - 結びつ
@@ -787,8 +784,9 @@ rules:
     pattern: やっぱり
   - expected: やみくも
     pattern: 闇雲
+  # LOCAL: exempt 体言止め / 用言止め, which are grammar terms, not "やめる".
   - expected: やめ
-    pattern: 止め
+    pattern: /(?<!言)止め/
   - expected: やりとり
     pattern: やり取り
   - expected: よそ
@@ -1408,8 +1406,9 @@ rules:
     pattern: /捕え([なたまれる])/
   - expected: 暮ら$1
     pattern: /暮([さしすせそ])/
+  # LOCAL: 鮮明 in upstream, plus 説明 (e.g. 「説明から」) which is not 明らか.
   - expected: $1明らか
-    pattern: /([^鮮])明か/
+    pattern: /([^鮮説])明か/
   - expected: 戻って
     pattern: もどって
   - expected: 戻り値
