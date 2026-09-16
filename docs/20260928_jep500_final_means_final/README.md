@@ -4,9 +4,9 @@
 
 Java 27 リリース記念連載の記事です。武田です。
 
-Java 27 は 2026年9月15日にリリースされました。この記事では Java 27 本体に入った JEP ではなく、半年前の Java 26 で入った [JEP 500: Prepare to Make Final Mean Final](https://openjdk.org/jeps/500) をひとつだけ取り上げます。直訳すると「final が final を意味するようにする準備」です。final は「変更できない」を表す修飾子だったはずで、それをあらためて final にするとはどういうことでしょうか。
+Java 27 は 2026年9月15日にリリースされました。この記事では Java 27 本体に入った JEP ではなく、半年前の Java 26 で入った [JEP 500: Prepare to Make Final Mean Final](https://openjdk.org/jeps/500) を取り上げます。直訳すると「final が final を意味するようにする準備」です。final は「変更できない」を表す修飾子だったはずで、それをあらためて final にするとはどういうことでしょうか。
 
-選んだ理由は、この JEP が業務アプリケーションのテストコードに直接関係するからです。private final なフィールドをリフレクションで差し替えるテストは、今もよく残っています。Spring の ReflectionTestUtils.setField や、それを自作したユーティリティです。生成 AI にテストを書かせても、この型は出てきます。そのコードが Java 26 以降では警告を出すようになりました。
+このテーマを選んだ理由は、この JEP が我々のアプリケーションコードにも直接関係することが多いからです。private final なフィールドをリフレクションで差し替えるテストは、今もよく残っています。Spring の `\ReflectionTestUtils.setField や、それを自作したユーティリティです。生成 AI にテストを書かせても、この形は出てきます。そのコードが Java 26 以降では警告を出すようになりました。
 
 ## final は final ではなかった
 
@@ -15,8 +15,15 @@ Java 27 は 2026年9月15日にリリースされました。この記事では 
 ```java
 public class Person {
     private final String name;
-    public Person(String name) { this.name = name; }
-    @Override public String toString() { return "Person{name='" + name + "'}"; }
+
+    public Person(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "Person{name='" + name + "'}";
+    }
 }
 ```
 
@@ -43,48 +50,48 @@ WARNING: Mutating final fields will be blocked in a future release unless final 
 Person{name='Bob'}
 ```
 
-書き換えは成功しています。ただし、将来のリリースでは塞ぐと予告されました。
+書き換えは成功しています。ただし、将来のリリースではブロックされると予告されました。
 
 setAccessible(true) を経由した final フィールドの書き換えは、2004年の JDK 5 から許されてきました。20年もの間、final は「通常の Java コードからは変更できない」という意味でしかなかったわけです。
 
-なぜそんな穴が開いていたのでしょうか。理由はシリアライズです。ObjectInputStream は、Serializable なクラスのオブジェクトをストリームから復元するとき、コンストラクタを通さずにフィールドへ値を書き込む必要があります。final フィールドもその対象です。この用途のために開けた通路が、誰からでも使える形で公開されました。DI コンテナ、モックライブラリ、JSON ライブラリがそこを通って final フィールドを埋めるようになり、今日に至ります。
+なぜそんな穴が開いていたのでしょうか。理由はシリアライズです。ObjectInputStream は、Serializable なクラスのオブジェクトをストリームから復元するとき、コンストラクタを通さずにフィールドへ値を書き込む必要があります。final フィールドもその対象です。この用途のために開けた穴が、誰からでも使える形で公開されました。DI コンテナ、モックライブラリ、JSON ライブラリがそこを通って final フィールドをセットするようになり、今日に至ります。
 
-## なぜ今になって塞ぐのか
+## なぜ今になってブロックするのか
 
-JEP 500 は、OpenJDK が「Integrity by Default」と呼ぶ一連の取り組みの一部です。Java 21 の JEP 451 はエージェントの動的ロードに警告を付け、Java 23 と 24 の JEP 471 と JEP 498 は `sun.misc.Unsafe` のメモリアクセスを非推奨にして警告を付け、Java 24 の JEP 472 は JNI の利用に同じ扱いをしました。どれも手順が同じです。まずデフォルトで警告し、数リリース後にデフォルトで拒否し、明示的なフラグでだけ許す。JEP 500 は、この手順を final フィールドに適用した最初の一歩です。
+JEP 500 は、OpenJDK が「Integrity by Default」と呼ぶ一連の取り組みの一部です。わかりやすく言うと、言語や JVM が保証しているはずの前提を、ライブラリが抜け道から破れる状態をなくしていく方針を指します。Java 21 の JEP 451 はエージェントの動的ロードに警告を付け、Java 23 と 24 の JEP 471 と JEP 498 は `sun.misc.Unsafe` のメモリアクセスを非推奨にして警告を付け、Java 24 の JEP 472 は JNI の利用に同じ扱いをしました。どれもアプローチは同じです。まずデフォルトで警告し、数リリース後にデフォルトで拒否し、明示的なフラグでだけ許す。JEP 500 は、これを final フィールドに適用した一段階目です。
 
-塞ぐ動機は2つあります。
+リフレクションによる final の変更をブロックする動機は2つあります。
 
 1つは、コードを読む側の推論です。final と書かれたフィールドを見た開発者は、コンストラクタを抜けた後は値が変わらないと考えて読みます。クラスパス上のどこかのライブラリが書き換えられる状態では、その前提は「たぶん変わらない」でしかありません。Java メモリモデルが final フィールドに与えている安全な公開の保証も、構築後に書き換えないことが前提です。
 
-もう1つは JVM の最適化です。JIT コンパイラは、変わらないと確信できる値を定数としてコンパイル結果に埋め込めます（定数畳み込み）。HotSpot は現在、static final や record のフィールドは信頼していますが、通常のクラスのインスタンス final フィールドは信頼していません。Field.set で書き換えられうるからです。書き換えがデフォルトで拒否されれば、この制限を外せます。
+もう1つは JVM の最適化です。JIT コンパイラは、変わらないと確信できる値を定数としてコンパイル結果に埋め込めます（定数畳み込み）。HotSpot は現在、static final や record のフィールドは信頼していますが、record 以外の final なインスタンスフィールドは信頼していません。Field.set で書き換えられうるからです。書き換えがデフォルトで拒否されれば、この制限を外せます。
 
-record のフィールドは、Java 16 で正式導入された時点からリフレクションでも書き換えられませんでした。JEP 500 は、通常のクラスの final フィールドを record と同じ地位に引き上げる変更です。
+record のフィールドは、Java 16 で正式導入された時点からリフレクションでも書き換えられませんでした。JEP 500 は、通常のクラスの final フィールドを record と同じような扱いにするための変更です。
 
-## 何が警告され、何がすでに例外なのか
+## 何が警告され、何が例外なのか
 
-警告が出るのは Field.set だけではありません。逆に、警告すら出ずに以前から例外になる経路もあります。Java 27 で試した結果を表にまとめます。
+final フィールドなら何でも警告が出るわけではありません。警告すら出ずに、以前から例外になる対象もあります。Java 26 で試した結果を表にまとめます。
 
-| 書き換えの経路                             | Java 27 での挙動                           |
-| ------------------------------------------ | ------------------------------------------ |
-| Field.set で通常クラスのインスタンス final | 警告。将来は IllegalAccessException        |
-| MethodHandles.Lookup.unreflectSetter       | 警告。文言は「unreflected for mutation」   |
-| record のフィールド                        | 以前から IllegalAccessException            |
-| static final                               | 以前から IllegalAccessException            |
-| `sun.misc.Unsafe` の putObject             | JEP 500 の対象外。JEP 498 の別の警告が出る |
+| 書き換える対象のフィールド                    | Java 27 での挙動                                          |
+| --------------------------------------------- | --------------------------------------------------------- |
+| final なインスタンスフィールド（record 以外） | 警告：書き換えは成功する（将来は IllegalAccessException） |
+| record のフィールド                           | 例外：IllegalAccessException                              |
+| final な static フィールド                    | 例外：IllegalAccessException                              |
 
-警告は書き換えた側のモジュールごとに一度だけ出ます。同じクラスから何回書き換えても、二度目以降は黙っています。
+書き換えの方法は、Core Reflection の Field.set でも MethodHandles.Lookup.unreflectSetter でも扱いが同じです。後者は警告の文言が「has been unreflected for mutation」に変わり、書き換えた時点ではなくメソッドハンドルを取得した時点で出ます。
 
-挙動は `--illegal-final-field-mutation` オプションで切り替えられます。
+警告は書き換えた側のモジュールごとに一度だけ出ます。同じクラスから何回書き換えても、二度目以降警告は表示されません。
+
+この挙動は `java` コマンドの `--illegal-final-field-mutation` オプションで切り替えられます。
 
 - `warn`: デフォルト。書き換えは成功し、モジュールごとに一度警告する
 - `debug`: 毎回警告し、スタックトレースも付ける
-- `deny`: IllegalAccessException を投げる。将来のデフォルト
-- `allow`: 黙って許す。このオプション自体が将来削除される
+- `deny`: IllegalAccessException を投げる（将来のデフォルト）
+- `allow`: 警告などを出さず許可する（将来削除されるオプション）
 
-## 鳴らすのは自分のコードとは限らない
+## 警告がでるのは自分のコードとは限らない
 
-業務アプリケーションで出会う警告は、自分で書いたリフレクションから出るとは限りません。たいていは別の場所から来ます。
+表示される警告は、自分で書いたリフレクションから出るとは限りません。多くの場合はフレームワークやライブラリといった別の場所から来ます。
 
 さきほどの Person クラスを Gson 2.13.2 で JSON から復元してみます。
 
@@ -100,14 +107,7 @@ WARNING: Final field name in class Person has been mutated reflectively by class
 
 `--illegal-final-field-mutation=deny` を付けると、両方とも復元に失敗します。Jackson は `unnamed module is not allowed to mutate final fields` と原因を書いた JsonMappingException を投げますが、Gson は `Unexpected IllegalAccessException occurred` と、ReflectionAccessFilter の設定を疑うメッセージを出します。ライブラリ側がまだこの例外を想定していないと、原因にたどり着くまでに一手間かかります。
 
-依存が多いアプリケーションでは、モジュールごとに一度きりの警告では棚卸しに足りません。JDK Flight Recorder に jdk.FinalFieldMutation イベントが追加されているので、こちらで全件を拾えます。書き換えられたクラスとフィールド名が、書き換えた側のスタックトレース付きで記録されます。
-
-```bash
-java -XX:StartFlightRecording:filename=rec.jfr -jar app.jar
-jfr print --events jdk.FinalFieldMutation rec.jfr
-```
-
-## 逃し方と、逃すべきでない場所
+## どう対処すべきか
 
 警告を消す手段は三段階あります。
 
@@ -119,14 +119,14 @@ jfr print --events jdk.FinalFieldMutation rec.jfr
 java --enable-final-field-mutation=com.google.gson -jar app.jar
 ```
 
-指定するのは、書き換えられるクラスのモジュールではなく、書き換える側のモジュールです。ライブラリがクラスパス上にあれば ALL-UNNAMED を指定します。コマンドラインのほかに、環境変数 JDK_JAVA_OPTIONS や実行可能 JAR のマニフェストの Enable-Final-Field-Mutation 属性でも指定できます。`--add-opens` と同じ感覚で扱えます。
+指定するのは、書き換えられるクラスのモジュールではなく、書き換える側のモジュールです。ライブラリがクラスパス上にあれば ALL-UNNAMED を指定します。コマンドラインのほかに、環境変数 JDK_JAVA_OPTIONS や実行可能 JAR のマニフェストの Enable-Final-Field-Mutation 属性でも指定できます。
 
 Serializable なクラスについては、開発者が何かする必要はありません。JDK のシリアライズと同じ手段が jdk.unsupported モジュールの ReflectionFactory を通してライブラリ向けに用意されており、ライブラリがそちらへ移行すればフラグなしで動きます。逆に言えば、Serializable でないクラスの final フィールドは、将来 JVM が不変だとみなしてよい対象です。
 
-`--illegal-final-field-mutation=allow` で黙らせる手は、避けたほうがよいでしょう。このオプションは将来削除されると明記されていて、消えたときに一気に例外へ変わります。むしろ逆に、CI のテスト実行に `deny` を付けるほうに価値があります。将来のデフォルトを先取りして、どのライブラリがどこで落ちるかを今のうちに知っておけます。
+`--illegal-final-field-mutation=allow` で警告を抑止するアプローチは、避けたほうがよいでしょう。このオプションは将来削除されると明記されていて、消えたときに一気に例外へ変わります。むしろ逆に、CI のテスト実行に `deny` を付けるほうに価値があります。将来のデフォルトを先取りして、どのライブラリがどこで落ちるかを今のうちに知っておけます。
 
 ## おわりに
 
-冒頭のテストコードに戻ります。ReflectionTestUtils.setField で final フィールドを差し替えるテストは、Java 27 では警告付きで通ります。いつ通らなくなるかは、JEP が「将来のリリース」としか書いていないので分かりません。ただ、Integrity by Default の先行例はどれも数リリースでデフォルトを切り替えてきました。
+ここまでみてきたようにリフレクションで final フィールドを差し替えるコードは、Java 27 では警告付きで通ります。いつ通らなくなるかは、JEP が「将来のリリース」としか書いていないので分かりません。ただ、Integrity by Default の先行例はどれも数リリースでデフォルトを切り替えてきました。
 
-final を本当に final にするのは JVM の仕事ですが、その日に備えて final フィールドを書き換えないコードにしておくのは開発者の仕事です。20年間続いた慣習ですから、まず自分のアプリケーションで `deny` を付けて動かし、どこが鳴るかを見るところから始めてみてください。
+final を本当に final にするのは JVM の仕事ですが、その日に備えて final フィールドを書き換えないコードにしておくのは開発者の仕事です。まずは自分のアプリケーションで `deny` を付けて動かし、どこに警告がでるかを見るところから始めてみると良いでしょう。
