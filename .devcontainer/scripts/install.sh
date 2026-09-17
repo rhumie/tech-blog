@@ -11,6 +11,7 @@ sudo apt-get install -y python3
 # Set the owner of the directories mounted via the volumes.
 sudo chown vscode:vscode node_modules
 sudo chown vscode:vscode "$HOME/.claude"
+sudo chown vscode:vscode "$HOME/.config/gh"
 
 # Install npm dependencies.
 npm install -g npm

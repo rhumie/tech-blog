@@ -17,6 +17,7 @@
       "installMaven": "true",
       "mavenVersion": "latest"
     },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
     "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
   },
 
@@ -24,7 +25,8 @@
   "forwardPorts": [3000, 35729],
 
   "mounts": [
-    "type=volume,source=claude-code-config,target=/home/vscode/.claude"
+    "type=volume,source=claude-code-config,target=/home/vscode/.claude",
+    "type=volume,source=gh-config,target=/home/vscode/.config/gh"
   ],
 
   // Configure tool-specific properties.
