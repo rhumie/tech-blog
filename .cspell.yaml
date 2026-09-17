@@ -4,6 +4,7 @@ words:
   - amzn
   - apimachinery
   - benchmem
+  - biasable
   - databind
   - docsify
   - fasterxml
@@ -15,17 +16,22 @@ words:
   - gson
   - guuid
   - hibits
+  - Lilliput
   - modernc
   - msecs
   - neild
+  - nocoh
   - Norming
   - pborman
   - pprof
   - println
   - reviewdog
+  - SapMachine
   - sdkman
   - sdkmanrc
+  - SPECjbb
   - SSKDs
   - textlint
   - unreflect
+  - Valhalla
   - womens
