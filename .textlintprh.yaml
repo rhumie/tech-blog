@@ -208,10 +208,6 @@ rules:
       - 唯一つ
   - expected: もう一度
     pattern: もう1度
-  - expected: もう一つ
-    pattern: もう1つ
-  - expected: 一つは
-    pattern: 1つは
   - expected: 一目瞭然
     pattern: 一目了然
   - expected: 一概に
