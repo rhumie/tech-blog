@@ -1,33 +1,31 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json
-
-# cSpell Settings
 version: "0.2"
-
-# language - current active spelling language
 language: en
-
-# words - list of words to be always considered correct
 words:
   - amzn
   - apimachinery
   - benchmem
+  - databind
   - docsify
+  - fasterxml
   - goarch
-  - goos
   - gofrs
+  - goos
   - goroutineleak
   - gouuid
+  - gson
   - guuid
   - hibits
   - modernc
   - msecs
   - neild
-  - pborman
   - Norming
+  - pborman
   - pprof
+  - println
   - reviewdog
   - sdkman
   - sdkmanrc
   - SSKDs
   - textlint
+  - unreflect
   - womens
