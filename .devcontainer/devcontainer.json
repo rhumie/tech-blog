@@ -13,7 +13,9 @@
     "ghcr.io/devcontainers/features/java:1": {
       "version": "27.0.0-amzn",
       "jdkDistro": "amzn",
-      "additionalVersions": "25.0.4-amzn"
+      "additionalVersions": "25.0.4-amzn",
+      "installMaven": "true",
+      "mavenVersion": "latest"
     },
     "ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {}
   },
@@ -37,7 +39,15 @@
           "*.drawio.png": "hediet.vscode-drawio"
         },
         "hediet.vscode-drawio.offline": false,
-        "hediet.vscode-drawio.theme": "kennedy"
+        "hediet.vscode-drawio.theme": "kennedy",
+        "java.checkstyle.configuration": "/google_checks.xml",
+        "java.format.settings.url": "https://raw.githubusercontent.com/google/styleguide/gh-pages/eclipse-java-google-style.xml",
+        "java.format.settings.profile": "GoogleStyle",
+        "java.format.comments.enabled": false,
+        "[java]": {
+          "editor.defaultFormatter": "redhat.java"
+        },
+        "java.checkstyle.version": "14.1.0"
       },
       "extensions": [
         "EditorConfig.EditorConfig",
@@ -45,7 +55,9 @@
         "DavidAnson.vscode-markdownlint",
         "3w36zj6.textlint",
         "streetsidesoftware.code-spell-checker",
-        "hediet.vscode-drawio"
+        "hediet.vscode-drawio",
+        "vscjava.vscode-java-pack",
+        "shengchen.vscode-checkstyle"
       ]
     }
   },
