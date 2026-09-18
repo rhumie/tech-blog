@@ -8,11 +8,37 @@ Java 27 は 2026年9月15日にリリースされました。この記事では�
 
 同じ連載で取り上げた JEP 500 と違って、この変更で警告や例外が増えることはありません。Java 27 に上げれば、コードを 1 行も変えずにヒープの使用量が減ります。ただ、「ヘッダが 4 バイト減る」と聞いて、自分のアプリケーションのヒープでどれくらい減るのかを答えられる人は、そう多くないでしょう。オブジェクトによっては 1 バイトも減りません。手元で Java 25 と Java 27 を並べて測ったので、その結果から見ていきます。
 
-## ヘッダには何が入っているのか
+## そもそもオブジェクトヘッダとは何か
 
-Java のオブジェクトは、フィールドの前に JVM が使うヘッダを持ちます。Java 25 までのヘッダは 2 つの部分からなります。前半の mark word は 64 ビットで、識別ハッシュコード（31 ビット）、GC が数える世代（4 ビット）、ロック状態のタグ（2 ビット）が入ります。後半はクラスポインタで、圧縮された形で 32 ビットです。合わせて 96 ビット、12 バイトになります。
+Java のオブジェクトは、ヒープメモリ上では連続したひとかたまりのバイト列として置かれます。その先頭に JVM の使う領域があり、フィールドの値はその後ろに並びます。この先頭の領域がオブジェクトヘッダです。開発者が書くコードからは見えませんが、`new` で作ったオブジェクトには必ず付き、大きさはクラスや中身によらず一定です。
 
-JOL（Java Object Layout）0.17 で `new Object()` の内訳を表示すると、Java 25 では次のようになります。
+入っているのは、JVM がそのオブジェクトを扱うために必要な情報で、用途は大きく 4 つあります。
+
+- 型：どのクラスのオブジェクトか（メソッド呼び出し、リフレクション、キャストの判定に使う）
+- ハッシュ：`System.identityHashCode` が返す値（一度計算したら変わらない）
+- GC：何回の GC を生き延びたか、移動したならどこへ移したか
+- ロック：`synchronized` が取っているロックの状態
+
+100 万個のオブジェクトがあれば、ヘッダも 100 万個分がヒープを占めます。1 個あたり数バイトの差が、全体では大きな量になります。
+
+## ヘッダはどう変わったのか
+
+Java 25 までのヘッダは 2 つに分かれます。前半は mark word と呼ばれ、さきほどの 4 つのうちハッシュ、GC、ロックの 3 つが入ります。後半は型を指すクラスポインタです。mark word が 64 ビット、圧縮クラスポインタが 32 ビットで、合わせて 96 ビット、12 バイトになります。
+
+mark word の 64 ビットに何がどの順で入るかは、HotSpot のソースの [markWord.hpp](https://github.com/openjdk/jdk/blob/jdk-27%2B33/src/hotspot/share/oops/markWord.hpp#L43-L49) にコメントで書かれています。内訳は次のとおりです。
+
+| ビット |  幅 | 中身                                           |
+| -----: | --: | ---------------------------------------------- |
+| 42〜63 |  22 | 未使用                                         |
+| 11〜41 |  31 | 識別ハッシュコード                             |
+|  7〜10 |   4 | Project Valhalla のための予約                  |
+|   3〜6 |   4 | GC が数える世代                                |
+|      2 |   1 | self-forwarded タグ（GC がコピーに失敗した印） |
+|   0〜1 |   2 | ロック状態のタグ                               |
+
+名前の付いたフィールドは合計 42 ビットで、上位の 22 ビットは空いています。それでも幅が 64 ビットあるのは、mark word がマシンのポインタと同じ大きさだからです。
+
+JOL（Java Object Layout）という JVM 内のオブジェクト・レイアウトを解析するためのツールを使用して `new Object()` の内訳を表示すると、Java 25 では次のようになります。OFF は先頭から何バイト目か、SZ はその要素が占めるバイト数を表します。
 
 ```text
 java.lang.Object object internals:
@@ -24,7 +50,7 @@ Instance size: 16 bytes
 Space losses: 0 bytes internal + 4 bytes external = 4 bytes total
 ```
 
-Object にはフィールドがないので、ヘッダ 12 バイトに 4 バイトの隙間が付いて 16 バイトです。JVM がオブジェクトを 8 バイト境界にそろえるからです。同じコードを Java 27 で動かすと次のようになります。
+Object にはフィールドがないので、中身はヘッダの 12 バイトだけです。それでも合計 16 バイトあるのは、JVM がオブジェクトの大きさを 8 の倍数にそろえるからです。切り上げで余った 4 バイトの隙間が、出力の alignment gap にあたります。同じコードを Java 27 で動かすと次のようになります。
 
 ```text
 java.lang.Object object internals:
@@ -34,13 +60,13 @@ Instance size: 8 bytes
 Space losses: 0 bytes internal + 0 bytes external = 0 bytes total
 ```
 
-class の行が消えて、mark word だけの 8 バイトになりました。クラスポインタがなくなったわけではありません。mark word の上位 22 ビットに、さらに圧縮した形で入っています。ハッシュコードの 31 ビット、世代の 4 ビット、タグの 2 ビットはそのまま残り、GC が使う 1 ビットと Project Valhalla のために予約した 4 ビットが加わって、ちょうど 64 ビットです。
+class の行が消えて、mark word だけの 8 バイトになりました。クラスポインタがなくなったわけではありません。さきほど空いていた上位 22 ビットに、さらに圧縮した形で入っています。ほかのフィールドは、1 ビットも動いていません。
 
-では、なぜ今までクラスポインタは mark word の外にあったのでしょうか。mark word は、ロックや GC の都合で丸ごと別の値に上書きされることがあったからです。たとえば従来のスタックロック方式は、ロックを取るときにヘッダをスレッドのスタックへ退避して、ヘッダにはその退避先のポインタを書き込みます。クラスポインタが mark word の中にあると、ロックを取った瞬間に型情報が消えます。Java 27 の HotSpot はタグの 2 ビットだけを書き換える軽量ロック方式に統一されていて、スタックロック方式を選ぶ LockingMode オプション自体が認識されません。GC がオブジェクトの移動先を記録する処理も同じ理由で書き直され、mark word を上書きしなくなりました。
+では、その 22 ビットはなぜ空いたままだったのでしょうか。mark word は、丸ごと別の値で上書きされることのある場所だったからです。ロックを取るときや、GC がオブジェクトを移動するとき、JVM はこの 64 ビットを作業用の置き場として使っていました。クラスポインタをここに置いていたら、上書きのたびに型が分からなくなります。この上書きをやめる書き直しが Java 24 までに済み、22 ビットが使えるようになりました。
 
 ## どのオブジェクトが小さくなるのか
 
-ヘッダが 4 バイト減ればオブジェクトも 4 バイト減る、というわけにはいきません。代表的なクラスについて、オブジェクト 1 個あたりのサイズを GC のクラスヒストグラム（jcmd の GC.class_histogram と同じ情報）から求めてみます。
+ヘッダが 4 バイト減れば、オブジェクトも 4 バイト減るとは限りません。代表的なクラスについて、オブジェクト 1 個あたりのサイズを GC のクラスヒストグラム（jcmd の GC.class_histogram と同じ情報）から求めてみます。
 
 | クラス                     | Java 25 | Java 27 |
 | -------------------------- | ------: | ------: |
@@ -61,8 +87,8 @@ void main() {
     map.put(i, "value-" + i);
   }
   System.gc();
-  Runtime rt = Runtime.getRuntime();
-  long usedMiB = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
+  var rt = Runtime.getRuntime();
+  var usedMiB = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024;
   IO.println("entries=" + map.size() + " usedHeap=" + usedMiB + " MiB");
 }
 ```
@@ -72,15 +98,27 @@ Java 25: entries=1000000 usedHeap=112 MiB
 Java 27: entries=1000000 usedHeap=96 MiB
 ```
 
-16 MiB、14% の減少。1 エントリあたり 16 バイトで、Node の 8 バイトと、文字列の中身を持つ byte 配列の 8 バイトです。Integer と String 本体は上の表のとおり変わっていません。JEP 450 は、実アプリケーションの生存データが 10〜20% 減ると書いています。オブジェクトの平均サイズが 32〜64 バイトのワークロードが多く、ヘッダだけで生存データの 20% 以上を占めていたからだ、というのがその説明です。
+16 MiB、14% の減少。1 エントリは 4 つのオブジェクトでできています。HashMap の Node、キーの Integer、値の String、そして文字の並びを持つ byte 配列です。小さくなったのは Node と byte 配列で、それぞれ 8 バイトずつ、合わせて 1 エントリあたり 16 バイト減りました。Integer と String は、さきほど説明したとおり変わっていません。
 
-## なぜ Java 27 でデフォルトになったのか
+[JEP 450](https://openjdk.org/jeps/450) を見ると、実アプリケーションでも 10%〜20% の減少が報告されています。
 
-Compact Object Headers そのものは新しい機能ではありません。Java 24 の JEP 450 で実験的機能として入り、Java 25 の JEP 519 で正式な機能になりました。有効にするオプションは Java 24 では `-XX:+UnlockExperimentalVMOptions -XX:+UseCompactObjectHeaders` の 2 つ、Java 25 では `-XX:+UseCompactObjectHeaders` の 1 つです。JEP 534 がしたことは、このオプションのデフォルト値を true にすることだけです。
+> Early adopters of Project Lilliput who have tried it with real-world applications confirm that live data is typically reduced by 10%–20%.
 
-JEP 534 は、デフォルトにしてよい根拠として実績を挙げています。Oracle は JDK のテストスイート全体を有効な状態で通しています。Amazon は数百のサービスを本番で有効にして運用していて、その多くは JDK 17 や JDK 21 へのバックポートです。SAP は自社の OpenJDK ディストリビューションである SapMachine で、すでにデフォルトを有効に切り替えています。性能の数字も並んでいます。SPECjbb2015 のヒープ使用量が 22% 減って CPU 時間は 8% 減った、G1 と Parallel の GC 回数が 15% 減った、並列度の高い JSON パーサのベンチマークが 10% 速くなった、というものです。
+この減り幅は、オブジェクトの大きさから説明がつきます。同じ JEP によれば、ワークロードの平均的なオブジェクトは 32〜64 バイトです。ヘッダの 12 バイトは、その 19%〜38% を占めます。そこから 4 バイト削り、8 バイト境界への切り上げも重なると、全体で 10%〜20% 減る計算になります。
 
-引き換えに失ったものは、逃げ道です。圧縮クラスポインタで表せるクラスは約 400 万個が上限で、これは Java 25 までと同じです。ただし Java 25 までは、上限を超えるアプリケーションは `-XX:-UseCompressedClassPointers` で圧縮をやめられました。Compact Object Headers は圧縮クラスポインタを前提にしていて、Java 27 ではこのオプションが削除されました。
+## Java 27 でデフォルトになった経緯
+
+Compact Object Headers そのものは新しい機能ではありません。Java 24 の JEP 450 で実験的機能として入り、Java 25 の JEP 519 で正式な機能になりました。有効にするオプションは Java 24 では `-XX:+UnlockExperimentalVMOptions -XX:+UseCompactObjectHeaders` の 2 つ、Java 25 では `-XX:+UseCompactObjectHeaders` の 1 つです。JEP 534 では、このオプションのデフォルト値が true になっただけです。
+
+JEP 534 がデフォルトにしてよい根拠として挙げているのは、Java 24 以降の実績です。Oracle はテストスイートで、Amazon は本番のサービスで、SAP は自社の OpenJDK ディストリビューションのデフォルトとして、それぞれ使ってきました。
+
+> Since JDK 24, compact object headers have proven their stability and performance.
+> They have been tested at Oracle by running the full JDK test suite.
+> They have also been tested at Amazon and SAP.
+> Amazon runs hundreds of services in production with compact object headers, most of them using backports of the feature to JDK 21 and JDK 17.
+> SAP has already switched to compact object headers by default in their downstream OpenJDK fork, the SapMachine; they run a large suite of tests daily and have a large customer base.
+
+この変更と引き換えに、使えなくなったオプションが 1 つあります。圧縮クラスポインタで表せるクラスは約 400 万個が上限で、これは Java 25 までと同じです。ただし Java 25 までは、上限を超えるアプリケーションは `-XX:-UseCompressedClassPointers` で圧縮をやめられました。Compact Object Headers は圧縮クラスポインタを前提にしているため、Java 27 ではこのオプションが削除されました。
 
 ```text
 OpenJDK 64-Bit Server VM warning: Ignoring option UseCompressedClassPointers; support was removed in 27.0
@@ -88,20 +126,20 @@ OpenJDK 64-Bit Server VM warning: Ignoring option UseCompressedClassPointers; su
 
 JEP 450 は、400 万個のクラスをロードするアプリケーションはまだ見たことがない、と書いています。
 
-## 我々は何をすべきか
+## このアップデートをうけて何をすべきか
 
-基本の答えは「何もしなくてよい」です。それでも、3 つ確認しておくことがあります。
+基本的には「何もしなくてよい」です。ただし 3 つポイントがあります。
 
-1 つ目は、Java 25 を使っているなら今日から使えることです。JEP 519 で正式な機能になっているので、`-XX:+UseCompactObjectHeaders` を付けるだけです。実際にこのオプションを付けた Java 25 で先ほどのクラスヒストグラムを取ると、Java 27 と同じ数字になりました。Java 27 へ上げる前に、自分のアプリケーションで減り幅を測っておけます。
+1 つ目は、現在 Java 25 を使っているなら今日から試せることです。JEP 519 で正式な機能になっているので、`-XX:+UseCompactObjectHeaders` を付けるだけで有効になります。実際にこのオプションを付けた Java 25 でさきほどのクラスヒストグラムを取ると、Java 27 と同じ数字になりました。Java 27 へバージョンアップする前に、自分のアプリケーションで減り幅を測っておくことができます。
 
 2 つ目は、減った分の扱いです。ヒープが 14% 減ったからといって、コンテナのメモリ制限をそのまま 14% 削るのは早計でしょう。減り幅はオブジェクトの形で決まり、上の表のとおりクラスによってはゼロです。GC の回数が減る効果は、ヒープを小さくすると相殺されます。まず現行の設定で GC ログを見て、それから決めるのが順当です。
 
-3 つ目は、戻す手段です。何か問題が起きたら `-XX:-UseCompactObjectHeaders` で従来のレイアウトに戻せます。JDK には無効時のための CDS アーカイブ classes_nocoh.jsa も同梱されていて、リリースノートは起動性能も同等だとしています。ただし Java 27 のリリースノートは、このオプションを将来非推奨にして削除する計画だと書いています。恒久的な逃げ道ではなく、原因を調べる時間を稼ぐためのものです。
+3 つ目は、戻す手段です。何か問題が起きたら `-XX:-UseCompactObjectHeaders` で従来のレイアウトに戻せます。ただし Java 27 のリリースノートは、このオプションを将来非推奨にして削除する計画だと書いています。恒久的なオプションではなく、問題が発生した際に原因を調べるための暫定的なオプションです。
 
 ## おわりに
 
-JEP 534 は、Java 27 に上げるだけで受け取れる変更です。JEP 500 が開発者にコードの見直しを求めていたのと比べると、こちらは JVM の側で完結しています。
+JEP 534 は、Java 27 にバージョンアップするだけで有効になる変更です。
 
-ただ、どれくらい減ったかを知っているのは JVM だけです。手元の HashMap では 14% でしたが、Integer や String が大半を占めるヒープなら数字はもっと小さくなります。Java 25 でも試せるので、まず自分のアプリケーションで測ってみることをお勧めします。
+サンプルの HashMap では減り幅は 14% でしたが、Integer や String が大半を占めるヒープなら数字はもっと小さくなります。この機能は Java 25 から試せるので、まず自分のアプリケーションで測ってみることをお勧めします。
 
 この記事で動かしたサンプルコードは [GitHub](https://github.com/rhumie/tech-blog/tree/main/docs/20260929_jep534_compact_object_headers/example) で公開しています。

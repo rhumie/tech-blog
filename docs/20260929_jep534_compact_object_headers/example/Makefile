@@ -15,6 +15,12 @@ run: libs
 	$(print) 'java.lang.Object のヘッダ（Java 27）'
 	$(JAVA27) -cp 'libs/*' $(SRC)/JolDemo.java 2>/dev/null
 
+	$(print) 'mark word のビットの並び（Java 25）'
+	$(JAVA25) -cp 'libs/*' $(SRC)/MarkWordDemo.java 2>/dev/null
+
+	$(print) 'mark word のビットの並び（Java 27）'
+	$(JAVA27) -cp 'libs/*' $(SRC)/MarkWordDemo.java 2>/dev/null
+
 	$(print) 'オブジェクト 1 個あたりのサイズ（Java 25）'
 	$(JAVA25) $(SRC)/ObjectSizeDemo.java
 

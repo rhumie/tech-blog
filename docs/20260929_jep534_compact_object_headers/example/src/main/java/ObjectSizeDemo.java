@@ -1,18 +1,14 @@
 import java.lang.management.ManagementFactory;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import javax.management.ObjectName;
 
 /*
  * 代表的なオブジェクトの 1 個あたりのサイズを、GC のクラスヒストグラムから求める.
  *
- * jcmd <pid> GC.class_histogram と同じ情報を DiagnosticCommand MBean 経由で取得し、
- * bytes / instances を表示する.
+ * jcmd <pid> GC.class_histogram と同じ情報を DiagnosticCommand MBean 経由で取得し、 bytes / instances を表示する.
  */
 
-record Point(int x, int y) {}
+record Point(int x, int y) {
+}
 
 static final int N = 100_000;
 
@@ -26,24 +22,31 @@ void main() throws Exception {
     map.put(i, "v" + i);
   }
 
-  var server = ManagementFactory.getPlatformMBeanServer();
-  String histogram = (String) server.invoke(
-      new ObjectName("com.sun.management:type=DiagnosticCommand"),
-      "gcClassHistogram",
-      new Object[] {new String[0]},
-      new String[] {String[].class.getName()});
-
-  for (String name : List.of("java.lang.Object", "Point", "java.lang.Integer",
-      "java.lang.String", "java.util.HashMap$Node")) {
-    histogram.lines()
-        .map(line -> line.trim().split("\\s+"))
-        .filter(cols -> cols.length >= 4 && (cols[3].equals(name) || cols[3].endsWith("$" + name)))
-        .findFirst()
-        .ifPresent(cols -> {
-          long instances = Long.parseLong(cols[1]);
-          long bytes = Long.parseLong(cols[2]);
-          IO.println(String.format("%-24s %3d bytes", cols[3], bytes / instances));
-        });
+  String histogram = classHistogram();
+  for (String name : List.of("Object", "Point", "Integer", "String", "HashMap$Node")) {
+    printSize(histogram, name);
   }
   IO.println(keep.size() + map.size());
+}
+
+String classHistogram() throws Exception {
+  var server = ManagementFactory.getPlatformMBeanServer();
+  var command = new ObjectName("com.sun.management:type=DiagnosticCommand");
+  var args = new Object[] {new String[0]};
+  var signature = new String[] {String[].class.getName()};
+  return (String) server.invoke(command, "gcClassHistogram", args, signature);
+}
+
+void printSize(String histogram, String name) {
+  for (String line : histogram.lines().toList()) {
+    String[] cols = line.trim().split("\\s+");
+    if (cols.length < 4) {
+      continue;
+    }
+    if (cols[3].endsWith("." + name) || cols[3].endsWith("$" + name)) {
+      long size = Long.parseLong(cols[2]) / Long.parseLong(cols[1]);
+      IO.println("%-24s %3d bytes".formatted(cols[3], size));
+      return;
+    }
+  }
 }
