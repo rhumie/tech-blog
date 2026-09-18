@@ -16,6 +16,8 @@ words:
   - gson
   - guuid
   - hibits
+  - hpp
+  - jsa
   - Lilliput
   - modernc
   - msecs
@@ -29,7 +31,6 @@ words:
   - SapMachine
   - sdkman
   - sdkmanrc
-  - SPECjbb
   - SSKDs
   - textlint
   - unreflect

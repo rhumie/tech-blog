@@ -1063,8 +1063,10 @@ rules:
     pattern: /([^追])及び/
   - expected: したうえ
     pattern: した上
+  # LOCAL: narrowed. This targets the conjunction その上 (moreover); it must not
+  # fire inside compounds such as その上書き.
   - expected: そのうえ
-    pattern: その上
+    pattern: /その上(?!書)/
   - expected: はじめとする
     pattern: 始めとする
   - expected: はじめとした
@@ -1079,16 +1081,20 @@ rules:
   # we only care about the section heading 始めに -> はじめに.
   - expected: はじめに
     pattern: 始めに
+  # LOCAL: narrowed. "ひとかたまり" is a lexicalised compound written in kana;
+  # only a standalone かたまり should become 塊.
   - expected: 塊
-    pattern: かたまり
+    pattern: /(?<!ひと)かたまり/
   - expected: やり方
     pattern: やりかた
   - expected: あり方
     pattern: ありかた
   - expected: 形
     pattern: かたち
+  # LOCAL: narrowed. Upstream guards this catch-all by rule order alone, so
+  # "ひとかたまり" falls through to it once かたまり is narrowed above.
   - expected: 方
-    pattern: かた
+    pattern: /かた(?!まり)/
   - expected: すまな
     pattern: 済まな
   - expected: すみません
@@ -3032,8 +3038,10 @@ rules:
   - expected: て
     pattern: /(当)?てて/
     regexpMustEmpty: $1
+  # LOCAL: narrowed. This catches an accidentally doubled で; 「〜でできる」 is a
+  # legitimate form and must not be rewritten.
   - expected: で
-    pattern: /でで/
+    pattern: /でで(?!き)/
   - expected: $1の
     pattern: /([^も])のの/
   - expected: は
