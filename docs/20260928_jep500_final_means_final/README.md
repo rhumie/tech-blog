@@ -107,7 +107,7 @@ WARNING: Final field name in class GsonDemo$Person has been mutated reflectively
 
 Jackson は3系で方針を変えました。`tools.jackson.core:jackson-databind:3.2.2` で同じクラスを復元すると、警告は出ません。MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS のデフォルトが false になり、final フィールドへ書き込まなくなったからです。ただし FAIL_ON_UNKNOWN_PROPERTIES のデフォルトも false です。例外は投げられず、name は null のまま返ります。警告が消えたからといって、対処できたわけではありません。
 
-## 我々はどう対処すべきか
+## どう対処すべきか
 
 警告を消す手段は3つあります。良いほうから順に、書き換えをやめる、フラグで許可する、警告だけ黙らせる、と並びます。
 
