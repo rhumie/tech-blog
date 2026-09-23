@@ -1,8 +1,12 @@
 SRC := src/main/java
+JAVA25 ?= $(SDKMAN_CANDIDATES_DIR)/java/25.0.4-amzn/bin/java
 print = @printf '\n--- %s\n'
 
 .PHONY: run libs clean
 run: libs
+	$(print) 'final フィールドをリフレクション（Field.set）で書き換える（Java 25）'
+	$(JAVA25) $(SRC)/FieldSetDemo.java
+
 	$(print) 'final フィールドをリフレクション（Field.set）で書き換える'
 	java $(SRC)/FieldSetDemo.java
 
