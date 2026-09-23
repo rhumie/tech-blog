@@ -27,16 +27,16 @@ Java 25 までのヘッダは 2 つに分かれます。前半は mark word と�
 
 mark word の 64 ビットに何がどの順で入るかは、HotSpot のソースの [markWord.hpp](https://github.com/openjdk/jdk/blob/jdk-27%2B33/src/hotspot/share/oops/markWord.hpp#L43-L49) にコメントで書かれています。内訳は次のとおりです。
 
-| ビット |  幅 | 中身                                           |
-| -----: | --: | ---------------------------------------------- |
-| 42〜63 |  22 | 未使用                                         |
-| 11〜41 |  31 | 識別ハッシュコード                             |
-|  7〜10 |   4 | Project Valhalla のための予約                  |
-|   3〜6 |   4 | GC が数える世代                                |
-|      2 |   1 | self-forwarded タグ（GC がコピーに失敗した印） |
-|   0〜1 |   2 | ロック状態のタグ                               |
+| ビット | 長さ | 用途                                           |
+| -----: | ---: | ---------------------------------------------- |
+| 42〜63 |   22 | 未使用                                         |
+| 11〜41 |   31 | 識別ハッシュコード                             |
+|  7〜10 |    4 | Project Valhalla のための予約                  |
+|   3〜6 |    4 | GC が数える世代                                |
+|      2 |    1 | self-forwarded タグ（GC がコピーに失敗した印） |
+|   0〜1 |    2 | ロック状態のタグ                               |
 
-名前の付いたフィールドは合計 42 ビットで、上位の 22 ビットは空いています。それでも幅が 64 ビットあるのは、mark word がマシンのポインタと同じ大きさだからです。
+名前の付いたフィールドは合計 42 ビットで、上位の 22 ビットは空いています。それでも 64 ビットあるのは、mark word がマシンのポインタと同じ大きさだからです。
 
 JOL（Java Object Layout）という JVM 内のオブジェクト・レイアウトを解析するためのツールを使用して `new Object()` の内訳を表示すると、Java 25 では次のようになります。OFF は先頭から何バイト目か、SZ はその要素が占めるバイト数を表します。
 
@@ -118,7 +118,8 @@ JEP 534 がデフォルトにしてよい根拠として挙げているのは、
 > Amazon runs hundreds of services in production with compact object headers, most of them using backports of the feature to JDK 21 and JDK 17.
 > SAP has already switched to compact object headers by default in their downstream OpenJDK fork, the SapMachine; they run a large suite of tests daily and have a large customer base.
 
-この変更と引き換えに、使えなくなったオプションが 1 つあります。圧縮クラスポインタで表せるクラスは約 400 万個が上限で、これは Java 25 までと同じです。ただし Java 25 までは、上限を超えるアプリケーションは `-XX:-UseCompressedClassPointers` で圧縮をやめられました。Compact Object Headers は圧縮クラスポインタを前提にしているため、Java 27 ではこのオプションが削除されました。
+注意点として Java 25 まで使えた `-XX:-UseCompressedClassPointers` は、Java 27 では指定しても無視されます。
+これは、圧縮クラスポインタで表せるクラス数の上限（約 400 万個）を超える場合に圧縮をやめるためのオプションですが、Compact Object Headers は圧縮クラスポインタを前提にしているため、この回避策がなくなりました。
 
 ```text
 OpenJDK 64-Bit Server VM warning: Ignoring option UseCompressedClassPointers; support was removed in 27.0
@@ -128,7 +129,7 @@ JEP 450 は、400 万個のクラスをロードするアプリケーション�
 
 ## このアップデートをうけて何をすべきか
 
-基本的には「何もしなくてよい」です。ただし 3 つポイントがあります。
+基本的には「何もしなくてよい」です。そのうえで、自分のアプリケーションで試すなら、3 つポイントがあります。
 
 1 つ目は、現在 Java 25 を使っているなら今日から試せることです。JEP 519 で正式な機能になっているので、`-XX:+UseCompactObjectHeaders` を付けるだけで有効になります。実際にこのオプションを付けた Java 25 でさきほどのクラスヒストグラムを取ると、Java 27 と同じ数字になりました。Java 27 へバージョンアップする前に、自分のアプリケーションで減り幅を測っておくことができます。
 
