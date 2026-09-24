@@ -8,7 +8,15 @@
 
 :root {
   --font-family: "SmartFontUI", "Hiragino Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
   --link-color: var(--theme-color);
+}
+
+/* Keep ->, !=, >= as written: the articles print column-aligned JOL output. */
+.markdown-section code,
+.markdown-section pre,
+.markdown-section samp {
+  font-variant-ligatures: none;
 }
 
 .markdown-section a:not(.button) {

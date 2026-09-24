@@ -10,7 +10,7 @@ Java 27 は 2026年9月15日にリリースされました。この記事では 
 
 ## final は final ではなかった
 
-警告を出しているのは、たとえば次のようなコードです。名前を持つだけのクラスと、それをリフレクションで書き換える main です。クラス宣言のない書き方は Java 25 で正式化されたもので、このまま `java` コマンドに渡せます。
+例として、次のコードを実行します。名前を持つだけのクラスと、それをリフレクションで書き換える main です。
 
 ```java
 import java.lang.reflect.Field;
@@ -37,7 +37,13 @@ void main() throws Exception {
 }
 ```
 
-Java 25 までは、これが何も言わずに動きます。final と書いたフィールドが Bob に書き換わります。例外は出ず、警告もありません。Java 27 で実行すると次のようになります。
+Java 25 までは、警告が出ません。
+
+```text
+Person{name='Bob'}
+```
+
+final と書いたフィールドが Bob に書き換わっています。同じコードを Java 27 で実行すると次のようになります。
 
 ```text
 WARNING: Final field name in class FieldSetDemo$Person has been mutated reflectively by class FieldSetDemo in unnamed module @ca263c2 (file:/path/to/FieldSetDemo.java)
@@ -46,7 +52,7 @@ WARNING: Mutating final fields will be blocked in a future release unless final 
 Person{name='Bob'}
 ```
 
-書き換えは成功しています。ただし、将来のリリースではブロックされると予告されました。
+Java 27 でも書き換えは成功しています。ただし、将来のリリースではブロックされると予告されました。
 
 setAccessible(true) を経由した final フィールドの書き換えは、2004年の JDK 5 から許されてきました。20年もの間、final は「通常の Java コードからは変更できない」という意味でしかなかったわけです。
 
@@ -107,9 +113,9 @@ WARNING: Final field name in class GsonDemo$Person has been mutated reflectively
 
 Jackson は3系で方針を変えました。`tools.jackson.core:jackson-databind:3.2.2` で同じクラスを復元すると、警告は出ません。MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS のデフォルトが false になり、final フィールドへ書き込まなくなったからです。ただし FAIL_ON_UNKNOWN_PROPERTIES のデフォルトも false です。例外は投げられず、name は null のまま返ります。警告が消えたからといって、対処できたわけではありません。
 
-## 我々はどう対処すべきか
+## どう対処すべきか
 
-警告を消す手段は3つあります。良いほうから順に、書き換えをやめる、フラグで許可する、警告だけ黙らせる、と並びます。
+警告を消す手段は3つあります。良いほうから順に、書き換えをやめる、フラグで許可する、警告だけ非表示にする、と並びます。
 
 一番良いのは、書き換えをやめることです。Jackson なら @JsonCreator を付けたコンストラクタか record にすれば、フィールドへの直接書き込みは起きません。テストで final フィールドを差し替えているなら、コンストラクタから依存を渡す形に直します。JEP 自身も、DI やテストのフレームワークに対して final フィールドを書き換えない設計への見直しを求めています。
 
@@ -123,7 +129,7 @@ java --enable-final-field-mutation=ALL-UNNAMED -jar app.jar
 
 なお、Serializable なクラスについては、開発者が何かする必要はありません。JDK のシリアライズと同じ手段が jdk.unsupported モジュールの ReflectionFactory を通してライブラリ向けに用意されており、ライブラリがそちらへ移行すればフラグなしで動きます。逆に言えば、Serializable でないクラスの final フィールドは、将来 JVM が不変だとみなしてよい対象です。
 
-3つ目の、`--illegal-final-field-mutation=allow` で警告を抑止するアプローチは、避けたほうがよいでしょう。このオプションは将来削除されると明記されていて、消えたときに一気に例外へ変わります。むしろ逆に、CI のテスト実行に `deny` を付けるほうに価値があります。将来のデフォルトを先取りして、どのライブラリがどこで落ちるかを今のうちに知っておけます。
+3つ目の、`--illegal-final-field-mutation=allow` で警告を非表示にするアプローチは、避けたほうがよいでしょう。このオプションは将来削除されると明記されていて、消えたときに一気に例外へ変わります。むしろ逆に、CI のテスト実行に `deny` を付けるほうに価値があります。将来のデフォルトを先取りして、どのライブラリがどこで落ちるかを今のうちに知っておけます。
 
 ## おわりに
 
