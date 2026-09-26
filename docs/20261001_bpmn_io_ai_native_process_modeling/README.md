@@ -149,7 +149,7 @@ bpmn.io で描いた業務フローは、次のような XML になります。�
 
 ## bpmnlint による静的解析
 
-bpmnlint は、.bpmn ファイルを設定可能なルールで検査するコマンドラインツールです。ESLint と同じ作法で、設定ファイル `.bpmnlintrc` に `extends` でルールセットを継承し、`rules` で個別に上書きします。
+bpmnlint は、.bpmn ファイルを検査するコマンドラインツールです。ESLint と同じ作法で、設定ファイル `.bpmnlintrc` に `extends` でルールセットを継承し、`rules` で個別に上書きします。
 
 ```json
 {
@@ -260,7 +260,7 @@ paths:
 npx bpmn-to-image --no-footer --min-dimensions=1123x794 /path/to/file.bpmn:/path/to/file.svg
 ```
 
-`--no-footer` は bpmn.io のロゴとタイトルを消すオプション、`--min-dimensions=1123x794` は最小サイズを指定するオプションです[^min-dimensions]。VS Code をエディタとして利用している場合は VS Code のタスクとして変換作業を登録し、.bpmn ファイルを描き終えたらタスクを実行して SVG をコミットするような運用が考えられます。
+`--no-footer` は bpmn.io のロゴとタイトルを消すオプション、`--min-dimensions=1123x794` は最小サイズを指定するオプションです[^1]。VS Code をエディタとして利用している場合は VS Code のタスクとして変換作業を登録し、.bpmn ファイルを描き終えたらタスクを実行して SVG をコミットするような運用が考えられます。
 
 ## 運用してみて
 
@@ -274,4 +274,4 @@ BPMN という記法そのものは以前から知っていたものの、BPMN 2
 
 この記事で動かしたサンプルは [GitHub](https://github.com/rhumie/tech-blog/tree/main/docs/20261001_bpmn_io_ai_native_process_modeling/example) で公開しています。
 
-[^min-dimensions]: `--min-dimensions` は PNG と PDF にだけ適用されます。SVG は bpmn-js が図の要素を囲む範囲で書き出すので、この指定は反映されません。
+[^1]: `--min-dimensions` は PNG と PDF にだけ適用されます。SVG は bpmn-js が図の要素を囲む範囲で書き出すので、この指定は反映されません。
