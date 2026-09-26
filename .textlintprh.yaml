@@ -42,7 +42,7 @@ rules:
   - expected: 関連付け
     pattern: 関連づけ
   - expected: 受け付け
-    pattern: 受付
+    pattern: 受付け
   - expected: 位置付け
     pattern: 位置づけ
   - expected: 意味付け
@@ -1820,7 +1820,7 @@ rules:
   - expected: クラスタ
     pattern: /クラスター/
   - expected: グラウンド
-    pattern: /グランド/
+    pattern: /グランド(?!デザイン)/
   - expected: グリッド
     pattern: /\bGrid\b/
   - expected: クロージャ
@@ -1934,9 +1934,7 @@ rules:
   - expected: ツリーエントリ
     pattern: /ツリー・エントリ/
   - expected: テーブル
-    pattern:
-      - table
-      - Table
+    pattern: /\b[Tt]able\b/
   - expected: データサービス
     pattern: /\bData Services\b/
   - expected: データ
@@ -1945,8 +1943,8 @@ rules:
     pattern: /データセンタ([^ー])/
   - expected: データ同期
     pattern: /\bData Sync\b/
-  - expected: チェイン
-    pattern: /チェーン/
+  - expected: チェーン
+    pattern: /チェイン/
   - expected: ディザスタリカバリ
     pattern: /ディザスタ・リカバリ/
   - expected: ディスク
