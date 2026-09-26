@@ -34,7 +34,7 @@ globs:
 
 # Glob expressions to ignore when linting
 ignores:
-  - "node_modules/**"
+  - "**/node_modules/**"
 
 # Whether to disable the display of the banner message and version numbers on stdout
 noBanner: true
