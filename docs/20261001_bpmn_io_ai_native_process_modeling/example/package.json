@@ -2,10 +2,10 @@
   "name": "bpmn-io-ai-native-process-modeling-example",
   "version": "1.0.0",
   "private": true,
-  "description": "Example for the tech blog article: lint BPMN files with bpmnlint and render them to SVG with bpmn-to-image",
+  "description": "Example for the tech blog article: lint BPMN files with bpmnlint and render them to PNG with bpmn-to-image",
   "scripts": {
     "lint": "bpmnlint 'docs/**/*.bpmn'",
-    "build": "find docs -name '*.bpmn' | sed -E 's/(.*)\\.bpmn$/\\1.bpmn:\\1.svg/' | PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium xargs -r bpmn-to-image --no-footer --min-dimensions=1123x794"
+    "build": "find docs -name '*.bpmn' | sed -E 's/(.*)\\.bpmn$/\\1.bpmn:\\1.png/' | PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium xargs -r bpmn-to-image --no-footer"
   },
   "devDependencies": {
     "bpmn-to-image": "0.10.0",

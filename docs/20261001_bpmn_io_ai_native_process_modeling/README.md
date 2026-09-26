@@ -75,7 +75,7 @@ draw.io には BPMN の図形ライブラリがあり、BPMN の記法で図を�
 
 bpmn.io で描いた業務フローは、次のような XML になります。この記事のサンプルとして用意した、備品の購入申請のフローから一部を抜き出して見てみましょう。
 
-![備品の購入申請](./example/docs/purchase_request/purchase_request.svg)
+![備品の購入申請](./example/docs/purchase_request/purchase_request.png)
 
 ```xml
 <bpmn:userTask id="Task_Register" name="購入申請を&#10;登録">
@@ -182,7 +182,7 @@ bpmnlint が見ているのは構造です。要素がつながっているか�
 
 購入申請フローで、申請通知の送信側と受信側を逆にしてみます。申請者のレーンの「申請通知送信」を受信（キャッチ）イベントに、承認者のレーンの「申請通知受信」を送信（スロー）イベントに変えた版です。図では、手紙のアイコンが塗りつぶしか白抜きかの違いしかありません。
 
-![送受信を取り違えた版](./example/docs/purchase_request_swapped/purchase_request_swapped.svg)
+![送受信を取り違えた版](./example/docs/purchase_request_swapped/purchase_request_swapped.png)
 
 ```text
 $ npx bpmnlint docs/purchase_request_swapped/purchase_request_swapped.bpmn
@@ -191,7 +191,7 @@ $ npx bpmnlint docs/purchase_request_swapped/purchase_request_swapped.bpmn
 
 矢印はすべてつながり、ラベルも開始と終了もあるので、構造としては正しく、bpmnlint は何もエラーを出力しません。この誤りはカスタムルールを書けば検出できますが、カスタムルールだけでは検出できない誤りもあります。たとえば承認の可否で分岐するゲートウェイから出る YES と NO を入れ違えてしまったケースです。
 
-![YES と NO を入れ違えた版](./example/docs/purchase_request_inverted/purchase_request_inverted.svg)
+![YES と NO を入れ違えた版](./example/docs/purchase_request_inverted/purchase_request_inverted.png)
 
 ```text
 $ npx bpmnlint docs/purchase_request_inverted/purchase_request_inverted.bpmn
@@ -257,10 +257,10 @@ paths:
 画像化には [bpmn-to-image](https://github.com/bpmn-io/bpmn-to-image) を利用できます。内部的には Puppeteer でヘッドレスの Chromium を起動し、bpmn-js でレンダリングした結果を SVG、PNG、PDF に書き出します。
 
 ```bash
-npx bpmn-to-image --no-footer --min-dimensions=1123x794 /path/to/file.bpmn:/path/to/file.svg
+npx bpmn-to-image --no-footer --min-dimensions=1123x794 /path/to/file.bpmn:/path/to/file.png
 ```
 
-`--no-footer` は bpmn.io のロゴとタイトルを消すオプション、`--min-dimensions=1123x794` は最小サイズを指定するオプションです[^1]。VS Code をエディタとして利用している場合は VS Code のタスクとして変換作業を登録し、.bpmn ファイルを描き終えたらタスクを実行して SVG をコミットするような運用が考えられます。
+`--no-footer` は bpmn.io のロゴとタイトルを消すオプション、`--min-dimensions=1123x794` は最小サイズを指定するオプションです[^1]。VS Code をエディタとして利用している場合は VS Code のタスクとして変換作業を登録し、.bpmn ファイルを描き終えたらタスクを実行して PNG をコミットするような運用が考えられます。
 
 ## 運用してみて
 
@@ -274,4 +274,4 @@ BPMN という記法そのものは以前から知っていたものの、BPMN 2
 
 この記事で動かしたサンプルは [GitHub](https://github.com/rhumie/tech-blog/tree/main/docs/20261001_bpmn_io_ai_native_process_modeling/example) で公開しています。
 
-[^1]: `--min-dimensions` は PNG と PDF にだけ適用されます。SVG は bpmn-js が図の要素を囲む範囲で書き出すので、この指定は反映されません。
+[^1]: `--min-dimensions` は PNG と PDF にだけ適用され、SVG は bpmn-js が図の要素を囲む範囲で書き出されます。この記事に載せた図は、下側の余白を避けるために `--min-dimensions` を付けずに書き出しています。

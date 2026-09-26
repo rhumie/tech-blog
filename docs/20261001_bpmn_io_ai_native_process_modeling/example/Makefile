@@ -24,4 +24,4 @@ build:
 	npm run --silent build
 
 clean:
-	rm -f docs/*/*.svg
+	rm -f docs/*/*.png
