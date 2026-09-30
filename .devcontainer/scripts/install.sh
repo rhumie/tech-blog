@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-# Update System Packages.
+# Add the Google Cloud SDK apt repository.
+curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor --yes -o /usr/share/keyrings/cloud.google.gpg
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
+
+# Update system packages.
 sudo apt-get update
 
 # Install gnupg2 for sharing Git credentials.
@@ -8,10 +12,20 @@ sudo apt-get update
 sudo apt-get install -y gnupg2
 sudo apt-get install -y python3
 
+# Install the Google Cloud CLI from the official apt repository.
+# cf. https://docs.cloud.google.com/sdk/docs/install-sdk#deb
+sudo apt-get install -y google-cloud-cli
+
+# Install the Google Workspace CLI.
+# cf. https://github.com/googleworkspace/cli
+npm install -g @googleworkspace/cli@0.22.5
+
 # Set the owner of the directories mounted via the volumes.
-sudo chown vscode:vscode node_modules
-sudo chown vscode:vscode "$HOME/.claude"
-sudo chown vscode:vscode "$HOME/.config/gh"
+sudo chown -R vscode:vscode node_modules
+sudo chown -R vscode:vscode "$HOME/.claude"
+sudo chown -R vscode:vscode "$HOME/.config/gh"
+sudo chown -R vscode:vscode "$HOME/.config/gcloud"
+sudo chown -R vscode:vscode "$HOME/.config/gws"
 
 # Install npm dependencies.
 npm install -g npm
