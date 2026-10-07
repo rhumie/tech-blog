@@ -2,158 +2,346 @@
 
 ## はじめに
 
-『Fundamentals of Software Engineering: From Coder to Engineer』を読み終えました。O'Reilly Media の原書は2025年11月の刊行で、日本語版『ソフトウェアエンジニアリングの基礎 ―コーダーからエンジニアになるための実践ガイド』（村上列訳、オライリー・ジャパン）は2026年9月に出ました。私が読んだのはこの日本語版で、気になった箇所は原書の PDF と突き合わせています。
+[『ソフトウェアエンジニアリングの基礎 ―コーダーからエンジニアになるための実践ガイド』](https://www.oreilly.co.jp/books/9784814401789/)（村上列訳、オライリー・ジャパン、2026年9月）を読了しました。
 
-読みながら気になっていたのは、各章の末尾にある Additional Resources の節でした。本書はどの話題も入門の深さにとどめています。その代わり、章ごとに数冊の本を挙げ、序文では「気になった章があれば、その話題へ飛び込んでほしい」と誘導しています。1章の演習には、目次を眺めて弱い領域を選び、その章の Additional Resources を読むように、とまで書かれています。入門書として読み終えた時点で、次に読む本の地図が手元に残る構造です。
+ジュニアなエンジニアが成長するために知っておくべきことが非常によくまとまっており、共感する部分が多かったので、読んでみての感想を残しておきたいと思います。また、この書籍は各章の末尾で「関連リソース」として書籍をいくつか紹介しています。これだけよく整理された本なのでここから良質な読書マップが作れるのではないかと思い、整理してみました。
 
-この記事では、まず本書の概要と読み終えての評価を書きます。そのあとで章末に挙げられた書籍を洗い出し、どれをどの順に読むかを1枚の図にまとめます。
+## 書籍概要
 
-## どんな本か
+原書は O'Reilly Media の [『Fundamentals of Software Engineering: From Coder to Engineer』](https://www.oreilly.com/library/view/fundamentals-of-software/9781098143220/)（2025年11月）で、著者は Nathaniel Schutta と Dan Vega の2人です。
 
-著者は Nathaniel Schutta と Dan Vega の2人です。序文によれば、想定読者は新人のソフトウェアエンジニアで、大学やブートキャンプで教わることと、現場で必要になることの隙間を埋める「オンボーディングガイド」として書かれています。
+序文によれば、想定読者は新人のソフトウェアエンジニアで、大学やブートキャンプで教わることと、現場で必要になることのギャップを埋める「オンボーディングガイド」として書かれています。私自身はエンジニアとしてのキャリアが約15年になりますが、まさに新人のころ（新人研修を終えて現場に出たばかりのころ）に読んでおきたかったなと思いながら読んでいました。
 
-全体は4部15章です。第1部はコードを読む・書くといった中核のスキル、第2部はモデリングやテストなどの技術プラクティス、第3部は UI、データ、アーキテクチャ、本番環境といった設計と構築、第4部は生産性、学び方、ソフトスキル、キャリア、AI という職業人としての成長を扱います。
+全体は4部構成の全15章です。第1部はコードを読む・書くといったコアスキル、第2部はモデリングやテストなどの技術的なプラクティス、第3部は UI、データ、アーキテクチャ、本番環境といった設計と開発、第4部は生産性、学び方、ソフトスキル、キャリア、AI というプロフェッショナルとしての能力開発と成長を扱います。
 
-各章の構成は共通で、本文のあとに Wrapping Up、Putting It into Practice、Additional Resources の3節が続きます。Putting It into Practice は演習で、たとえば1章では「バグや機能を割り当てられたら、コードに飛びつく前の30分を調べものに使う」といった、すぐ試せる課題が並びます。Additional Resources がこの記事の主題で、書籍、記事、講演、ツールが章ごとに3件から十数件挙がっています。
+各章のページ数は次の通りです。
 
-章の厚みには偏りがあります。原書の目次から各章の開始ページの差を取ると、次のようになります。
+<!-- textlint-disable prh -->
 
-| 章                                    | ページ数 |
-| ------------------------------------- | -------- |
-| 8章 Working with Data                 | 46       |
-| 10章 To Production                    | 40       |
-| 14章 Career Management                | 36       |
-| 6章 Exploring and Modifying Systems   | 30       |
-| 7章 User Interface Design             | 30       |
-| 15章 The AI-Powered Software Engineer | 30       |
-| 2章 Reading Code                      | 22       |
-| 3章から5章、9章、12章、13章           | 各18     |
-| 1章 Programmer to Engineer            | 14       |
-| 11章 Powering Up Your Productivity    | 14       |
+| 章   | タイトル                             | ページ数 |
+| :--- | :----------------------------------- | :------- |
+| 1章  | プログラマからエンジニアへ           | 14       |
+| 2章  | コードを読む                         | 22       |
+| 3章  | コードを書く                         | 20       |
+| 4章  | モデル                               | 18       |
+| 5章  | 自動テスト                           | 18       |
+| 6章  | 初めて触れるシステムの調査と変更     | 32       |
+| 7章  | ユーザーインターフェース設計         | 30       |
+| 8章  | データの取り扱い                     | 48       |
+| 9章  | ソフトウェアアーキテクチャ           | 20       |
+| 10章 | 本番環境へ                           | 40       |
+| 11章 | 生産性を向上させる                   | 14       |
+| 12章 | 学び方を学ぶ                         | 18       |
+| 13章 | テクノロジー業界でソフトスキルを磨く | 20       |
+| 14章 | キャリアマネジメント                 | 38       |
+| 15章 | AI を駆使するソフトウェアエンジニア  | 29       |
 
-データと本番環境の2章で全体の4分の1近くを占めます。著者が新人に足りないと見ている領域は、ここに表れていると読みました。
+<!-- textlint-enable prh -->
 
-## 読み終えて
+ソフトウェアエンジニアリングという広いテーマを1冊にまとめるにあたって、何をどこまで書くかはかなり悩ましいと思います。そう考えると、ページ数が多い章ほど、著者が相対的に重要だと見ている章だと受け取ってよさそうです。中でも8章のデータと10章の本番環境は、ほかの章の2倍程度の分量があります。どちらもそれ単体で1冊の本が書けるトピックであり、重要な内容が多い領域なので納得です。
 
-一言でいえば、新人研修と現場の間をつなぐ本でした。研修ではバージョン管理やテストを「やるもの」として教わりますが、なぜやるのかは説明されないまま現場に出ます。私自身、バージョン管理を理由も教わらずに使わされ、あとから自分で理解した口です。本書は、その「なぜ」を、現場へ出る前にまとめて渡してくれます。
+## 読み終えた感想
 
-2章と3章の順序がまずよいと思いました。「読む」が「書く」より先に来ています。2章には、他人のコードを読むときの認知バイアスの話があります。先輩のコードを「ひどい」と言いながら読んでいた若いころを思い出し、身に覚えしかありませんでした。私はコードの読み方そのものを教わった記憶がありません。
+全体を通して良いなと思った点を紹介します。
 
-6章の未知のシステムの探索では、「内製のフレームワークとライブラリを特定する」という節が特によいと感じました。何が標準で何が独自かを見極める、という視点です。実際に現場で苦労したのは、独自のもののほうでした。新人のときに本章があれば、と思います。
+- テーマの選び方とそれぞれに割く分量のバランスがすばらしい。  
+  技術的なテーマのポイントの押さえ方（モデリング、テストピラミッド、トランザクション、キャッシュなど）もさることながら、ないがしろにされがちなソフトスキルまで丁寧に扱っている点が良い。ジュニアを育てる立場から読んでも、最低限押さえておいてほしいことのエッセンスが高い密度で詰まっている。
 
-8章のデータは、私が1年目に SQL しか知らず、O/R マッパやコネクションプールの存在すら知らずに苦労した領域でした。8章を読んで、ACID の一貫性と CAP 定理や結果整合性の一貫性が別物だと初めて整理できました。一貫性モデル、キャッシュ戦略、スケーリング、データ移行と、トピックの選び方が的確で、この構成を自分で組める気がしません。
+- リアルな現場を前提として書かれている。  
+  大学や新人研修で実施するようなゼロからの開発（グリーンフィールド開発）ではなく、既存のシステムに向き合うこと（ブラウンフィールド開発）を前提として書かれている。これに合わせて「コードを書く」より先に「コードを読む」の章を置いている点も良い。座学と現場のギャップがわかり、新人エンジニアの視野をぐっと広げてくれる一冊になっている。
 
-9章のアーキテクチャには「なりゆきのアーキテクト」というコラムがあります。アーキテクトの肩書きがなくてもアーキテクチャの仕事をしている人は多い、という話で、私も望んでなったわけではなく、見なければならなくて必然的にそうなりました。章の内容は『ソフトウェアアーキテクチャの基礎』を凝縮したもので、あの本への入り口として読めます。
+- なぜそれが必要なのかがわかる。  
+  バージョン管理、自動テスト、CI/CD など実際の現場では当たり前になっているプラクティスについて、なぜ必要なのかが明確に説明されている。私のように、なぜ必要かを教わらないまま、現場で言われるがままにいろいろなツールを入れさせられた人も少なくないはず。
 
-10章の本番環境は、環境固有の設定、フィーチャーフラグ、セキュリティ、コンプライアンス、デプロイ戦略と、かなり網羅的でした。これを全部「本番環境へ」の一章で扱うのか、とも思いましたが、知っておくべきことが並んでいます。グレースフルデグラデーション（一部が壊れても全体を落とさず、機能を段階的に落として動き続けること）という概念は、10章で初めて知りました。
+- あまり人から教わらないようなことを教えてくれる。  
+  生産性の高め方（ショートカットを使う話とか）やナレッジの管理方法、コミュニケーションの取り方や学習方法といった細かい話ではあるが、かゆいところに手が届くようなトピックが盛り込まれている。新人のころにこれを知れたらどれだけ楽だっただろうかというネタが多い。
 
-13章のソフトスキルには、「人間は技術ほど速くは変わらないから、ソフトスキルは時代遅れにならない」という一節があります。説得のやり方を「ハンマー」と「忍者」にたとえるのもおもしろく、同じ TDD の話を新人がしても通らず、社歴の長い人がしたら絶賛された、というコラムには現場のリアリティがありました。
+## 著者について
 
-14章のキャリアでは、選択肢そのものを並べて見せてくれます。「5年後にどうなりたいか」とはよく聞かれましたが、どういう選択肢があるのかが分からない状態が長く続いていたので、14章は新人のころの自分に読ませたいものでした。
+読みながら共感するところが多かったので、著者の2人のキャリアについて調べてみました。
 
-一方で、4章のモデリングと5章の自動テストでは、私にとって新しい発見はありませんでした。ただ、カバレッジは虚栄の指標だという整理や、テストピラミッドの各層の説明は、基本的な概念をそろえ直す意味で読む価値がありました。
+### Nathaniel Schutta
 
-扱っていないこともあります。Infrastructure as Code には索引にも項目がなく、設定のコード化や DB スキーマのバージョン管理は扱うのに、インフラのコード化には踏み込みません。チームマネジメントも出てきません。13章のソフトスキルは個人が周囲と協働する視点で書かれ、14章でエンジニアリングマネージャーはキャリアの選択肢として紹介されるだけです。本は一貫して個人としてのエンジニアの視点に閉じています。また、デプロイ戦略の分類が章内でそろっていない、configuration management を設定ファイル周りの狭い意味で使っている、といった用語の整理の甘さも何ヵ所かありました。
+[ntschutta.io](https://ntschutta.io/)
 
-それでも、入門書としての評価は変わりません。読むタイミングとしては、新人研修を終えて現場に出る直前か直後を推します。6章、8章、10章に書かれていることで困ったのは、ちょうどその時期でした。
+Nathaniel Schutta は Thoughtworks のソフトウェアアーキテクトです。Ryan Asleson との共著 [『Foundations of Ajax』](https://link.springer.com/book/10.1007/978-1-4302-0082-6)（2005年）をはじめとし、Neal Ford と Matthew McCullough との共著 [『Presentation Patterns』](https://www.informit.com/store/presentation-patterns-techniques-for-crafting-better-9780321820808)（2012年）、O'Reilly のレポート [『Thinking Architecturally』](https://www.oreilly.com/library/view/thinking-architecturally/9781492034421/)（2018年）と [『Responsible Microservices』](https://www.oreilly.com/library/view/responsible-microservices/9781492085294/)（2020年）を執筆しています。『Thinking Architecturally』は本書のさまざまな章で関連リソースとして挙げられています。2023年には Java Champion の称号を得ました。Java コミュニティへの貢献が認められた開発者に贈られるものです。講演の機会も多く、米国各地で開かれる開発者向けカンファレンス No Fluff Just Stuff の常連です。本業と並行して、ミネソタ大学の非常勤教授として「技術の変化を受け入れ、評価する姿勢」を学生に教えています。
 
-## 著者の2人
+### Dan Vega
 
-共感した本の著者が何者なのかは、読み終えると気になるものです。巻末の著者紹介と本人のサイトや講演者プロフィールから、2人の経歴を調べました。
+[danvega.dev](https://www.danvega.dev/)
 
-Nathaniel Schutta は Thoughtworks のソフトウェアアーキテクトで、2024年4月に Pivotal と VMware を経て移っています。1990年代後半にキャリアを始め、2005年の『Foundations of Ajax』を皮切りに、Neal Ford と Matthew McCullough との共著『Presentation Patterns』（2012年）、O'Reilly のレポート『Thinking Architecturally』（2018年）と『Responsible Microservices』（2020年）を書いています。本書の9章、12章、13章で『Thinking Architecturally』が挙がるのは、本人の著作だからです。2023年には Java Champion に選ばれ、No Fluff Just Stuff をはじめとするカンファレンスの常連講演者でもあります。そしてミネソタ大学の非常勤教授として、学生に「技術の変化を受け入れ、かつ評価すること」を教えています。
+Dan Vega は Broadcom の Spring Developer Advocate です。2000年に2年制の技術系カレッジを卒業しました。在学中から独学で Web アプリケーションを作り、仕事として請け負っていたそうです。卒業後はカリフォルニアのスタートアップ Five9 でテクニカルサポートとして働き、その後クリーブランドに戻って複数の企業で開発の仕事に就きました。途中、コーディングブートキャンプの Tech Elevator でカリキュラム開発を担当しています。2022年1月から VMware の Spring Developer Advocate を務め、Broadcom による買収後も同じ役割を続けています。2024年には Java Champion に選ばれました。[YouTube チャンネル](https://www.youtube.com/@DanVega) の登録者は2026年10月時点で約32万人、Udemy の受講者は約16万人で、週刊のニュースレターも発行しています。Spring Office Hours というポッドキャストでは共同ホストを務めています。
 
-Dan Vega は Broadcom の Spring Developer Advocate です。1996年に独学でプログラミングを始め、2000年に地元のカレッジを出てサンフランシスコのスタートアップに入り、その後クリーブランドに戻って複数の企業で開発を続けました。途中、コーディングブートキャンプの Tech Elevator でカリキュラム開発を担当しています。2022年1月から VMware の Spring Developer Advocate を務め、Broadcom による買収後も同じ役割を続けています。2024年には Java Champion に選ばれました。YouTube チャンネルの登録者は2026年10月時点で約32万人、Udemy の受講者は約16万人で、週刊のニュースレターと Spring Office Hours というポッドキャストも持っています。本書が初めての書籍です。
+### 2人の経歴をみて
 
-2人の経歴を並べて気付いたのは、序文の図が示す「教わること」と「必要なこと」の隙間の両側に、それぞれが立っていることでした。Schutta は大学で教える側、Vega はブートキャンプのカリキュラムを作る側を経験し、どちらも現場で25年以上開発を続けています。本書が隙間を埋める本として書けたのは、2人がその隙間を教室と現場の両方から見てきたからだと思います。4章にあった、図を印刷して壁に貼っていた時代の記述に好感を持ったのも、この経歴を知ると腑に落ちます。
+本書のコード例は Java が中心で、テストの例は JUnit と Mockito で書かれており、Spring Boot や Spring Data の話も何回か登場します。2人とも Java Champion だと知って、Java の例が多いことにも納得できました。
 
-## 章末に挙げられた本
+また、2人とも現役のエンジニアでありながら、人に教える立場にもいます。Schutta は大学で教え、Vega はブートキャンプでカリキュラムを作り、今は YouTube や講座で Spring を教えています。現場で手を動かし続けながら、人を育てる仕事にも長く関わってきたからこそ、若手にとって必要なことを解像度高く書けたのだと思います。
 
-Additional Resources に挙がる資料は、書籍のほかに記事、講演、ツール、Web サイトを含みます。ここでは書籍だけを洗い出しました。記事と講演（Jack Reeves の「Code as Design」、Rich Hickey の「Simple Made Easy」、Paul Graham の「Maker's Schedule, Manager's Schedule」など）、ツール（JUnit 5、Mockito、AssertJ など）、Web サイト（C4 model、Thoughtworks Technology Radar など）は表から外しています。
+## 関連する書籍
 
-同じ本が複数の章で挙がることがあります。3つの章で挙がるのは『達人プログラマー』、『情熱プログラマー』、そして Schutta 自身のレポート『Thinking Architecturally』の3冊でした。2つの章で挙がる本は『人月の神話』、『プロダクティブ・プログラマ』、『人を動かす』、『影響力の武器』と、4章と9章の両方に挙がる図の本3冊（『UMLモデリングのエッセンス』、『開発者とアーキテクトのためのコミュニケーションガイド』、Ashley Peacock の『Creating Software with Modern Diagramming Techniques』）です。
+各章の「関連リソース」では、書籍のほかにブログ記事、講演、Web サイトなどが挙げられています。ここでは書籍だけをピックアップして一覧化してみます。
 
-書籍は全部で55冊でした。邦訳の有無と書誌は2026年10月時点で確認したものです。原書の版と邦訳の版がずれている本は、邦訳の欄にそう書いています。
+書籍は全部で55冊でした。なお、同じ本が複数の章で挙がることがあります。3つの章で挙がるのは『達人プログラマー』、『情熱プログラマー』、そして Schutta 自身の『Thinking Architecturally』の3冊でした。
 
-<details>
-<summary>章末に挙げられた書籍の一覧（55冊）</summary>
+<!-- textlint-disable prh,ja-spacing/ja-space-between-half-and-full-width -->
 
-| 原書                                                        | 著者                                  | 原書刊行年        | 邦訳（出版社、刊行年）                                                                  | 本書の章     | ひとこと                                                                          |
-| ----------------------------------------------------------- | ------------------------------------- | ----------------- | --------------------------------------------------------------------------------------- | ------------ | --------------------------------------------------------------------------------- |
-| The Pragmatic Programmer, 20th Anniversary Edition          | David Thomas、Andrew Hunt             | 2019（初版 1999） | 『達人プログラマー 第2版』オーム社、2020                                                | 1・12・14章  | 職業プログラマーの心構えと習慣を網羅した定番                                      |
-| The Mythical Man-Month, Anniversary Edition                 | Fred Brooks                           | 1995（初版 1975） | 『人月の神話【新装版】』丸善出版、2014                                                  | 1・3章       | 人を増やしても遅れる、という古典。1章と15章に挙がる論文「No Silver Bullet」も収録 |
-| Design Patterns                                             | Erich Gamma ほか                      | 1994              | 『オブジェクト指向における再利用のためのデザインパターン 改訂版』SBクリエイティブ、1999 | 1章          | GoF の23パターン                                                                  |
-| Practices of an Agile Developer                             | Venkat Subramaniam、Andy Hunt         | 2006              | 『アジャイルプラクティス』オーム社、2007                                                | 1章          | 現場開発者の45の習慣                                                              |
-| The Productive Programmer                                   | Neal Ford                             | 2008              | 『プロダクティブ・プログラマ』オライリー・ジャパン、2009                                | 1・11章      | 開発者個人の生産性を道具と習慣から上げる                                          |
-| Software Engineering at Google                              | Titus Winters ほか編                  | 2020              | 『Googleのソフトウェアエンジニアリング』オライリー・ジャパン、2021                      | 1章          | 組織規模での文化、プロセス、ツール                                                |
-| The Staff Engineer's パス                                   | Tanya Reilly                          | 2022              | 『スタッフエンジニアの道』オライリー・ジャパン、2024                                    | 1章          | マネジメントに進まない上級技術職の道                                              |
-| Code Complete, 2nd Edition                                  | Steve McConnell                       | 2004              | 『CODE COMPLETE 第2版』上下、日経BP、2005                                               | 1章          | コード構築の実践を網羅した大著                                                    |
-| User Story Mapping                                          | Jeff Patton                           | 2014              | 『ユーザーストーリーマッピング』オライリー・ジャパン、2015                              | 4章          | 要求を地図として並べる手法                                                        |
-| Communication Patterns                                      | Jacqui Read                           | 2023              | 『開発者とアーキテクトのためのコミュニケーションガイド』オライリー・ジャパン、2025      | 4・9章       | 図と文書で技術を伝えるパターン集                                                  |
-| Creating Software with Modern Diagramming Techniques        | Ashley Peacock                        | 2023              | なし                                                                                    | 4・9章       | Mermaid などコードとして書く図                                                    |
-| UML Distilled, 3rd Edition                                  | Martin Fowler                         | 2003              | 『UMLモデリングのエッセンス 第3版』翔泳社、2005                                         | 4・9章       | UML の要点を薄くまとめた入門                                                      |
-| Clean Code                                                  | Robert C. Martin                      | 2008              | 『Clean Code』KADOKAWA、2017（初刊 2009）                                               | 5章          | 読みやすいコードの規律                                                            |
-| Refactoring, 2nd Edition                                    | Martin Fowler                         | 2018              | 『リファクタリング 第2版』オーム社、2019                                                | 6章          | 振る舞いを変えずに構造を直すカタログ                                              |
-| Working Effectively with Legacy Code                        | Michael Feathers                      | 2004              | 『レガシーコード改善ガイド』翔泳社、2009                                                | 6章          | テストのないコードにテストを入れる技法                                            |
-| Getting to Know IntelliJ IDEA                               | Trisha Gee、Helen Scott               | 2022              | なし                                                                                    | 6章          | IDE の機能を体系的に学ぶ                                                          |
-| The Design of Everyday Things, Revised and Expanded Edition | Don Norman                            | 2013（初版 1988） | 『誰のためのデザイン？ 増補・改訂版』新曜社、2015                                       | 7章          | アフォーダンスなど認知科学からのデザイン原論                                      |
-| The Non-Designer's Design Book, 4th Edition                 | Robin Williams                        | 2014              | 『ノンデザイナーズ・デザインブック 第4版』マイナビ出版、2016                            | 7章          | 近接、整列、反復、コントラストの4原則                                             |
-| About Face, 4th Edition                                     | Alan Cooper ほか                      | 2014              | 『ABOUT FACE インタラクションデザインの本質』マイナビ出版、2024                         | 7章          | ゴール指向のインタラクションデザイン                                              |
-| Designing Interfaces, 3rd Edition                           | Jenifer Tidwell ほか                  | 2019              | 第2版のみ『デザイニング・インターフェース 第2版』オライリー・ジャパン、2011             | 7章          | UI パターンのカタログ                                                             |
-| Designing Data-Intensive Applications, 2nd Edition          | Martin Kleppmann、Chris Riccomini     | 2026              | 第1版のみ『データ指向アプリケーションデザイン』オライリー・ジャパン、2019               | 8章          | 分散データシステムの原理                                                          |
-| Seven Databases in Seven Weeks, 2nd Edition                 | Luc Perkins ほか                      | 2018              | 初版のみ『7つのデータベース 7つの世界』オーム社、2013                                   | 8章          | 7種のデータベースを手を動かして比べる                                             |
-| Refactoring Databases                                       | Scott Ambler、Pramod Sadalage         | 2006              | 『データベース・リファクタリング』ピアソン・エデュケーション、2008                      | 8章          | 稼働中のスキーマを段階的に変える                                                  |
-| Fundamentals of Data Engineering                            | Joe Reis、Matt Housley                | 2022              | 『データエンジニアリングの基礎』オライリー・ジャパン、2024                              | 8章          | データ基盤のライフサイクル全体                                                    |
-| NoSQL Distilled                                             | Pramod Sadalage、Martin Fowler        | 2012              | なし                                                                                    | 8章          | NoSQL の分類と使い分けの薄い入門                                                  |
-| Thinking Architecturally                                    | Nathaniel Schutta                     | 2018              | なし                                                                                    | 9・12・13章  | 著者自身の無料レポート。技術の変化をどう評価するか                                |
-| Head First Software Architecture                            | Raju Gandhi、Mark Richards、Neal Ford | 2024              | なし                                                                                    | 9章          | アーキテクチャ入門の Head First 版                                                |
-| Fundamentals of Software Architecture                       | Mark Richards、Neal Ford              | 2020              | 『ソフトウェアアーキテクチャの基礎』オライリー・ジャパン、2022（第2版の邦訳は 2026）    | 9章          | トレードオフ分析とアーキテクチャスタイル                                          |
-| How to Win Friends and Influence People                     | Dale Carnegie                         | 1936              | 『人を動かす 改訂新装版』創元社、2023                                                   | 9・13章      | 対人関係の古典                                                                    |
-| Building Evolutionary Architectures, 2nd Edition            | Neal Ford ほか                        | 2022              | 初版のみ『進化的アーキテクチャ』オライリー・ジャパン、2018                              | 9章          | 適応度関数で変化に耐える設計                                                      |
-| Influence, New and Expanded                                 | Robert Cialdini                       | 2021              | 『影響力の武器［新版］』誠信書房、2023                                                  | 9・13章      | 説得の心理学の7原理                                                               |
-| Continuous Delivery                                         | Jez Humble、David Farley              | 2010              | 『継続的デリバリー』KADOKAWA、2017（初刊 2012）                                         | 10章         | ビルドからリリースまでを自動化するパイプラインの原典                              |
-| The Phoenix Project                                         | Gene Kim ほか                         | 2013              | 『The DevOps 逆転だ！』日経BP、2014                                                     | 10章         | 小説仕立てで DevOps を描く                                                        |
-| Head First Git                                              | Raju Gandhi                           | 2022              | なし                                                                                    | 10章         | Git のしくみから学ぶ入門                                                          |
-| Learning GitHub Actions                                     | Brent Laster                          | 2023              | なし                                                                                    | 10章         | GitHub Actions による CI/CD                                                       |
-| Feature Flags                                               | Ben Nadel                             | 2024              | なし                                                                                    | 10章         | フィーチャーフラグの運用に絞った自費出版                                          |
-| Flow                                                        | Mihaly Csikszentmihalyi               | 1990              | 『フロー体験 喜びの現象学』世界思想社、1996                                             | 11章         | 没頭状態の心理学                                                                  |
-| Building a Second Brain                                     | Tiago Forte                           | 2022              | 『SECOND BRAIN』東洋経済新報社、2023                                                    | 11章         | 個人の知識管理の方法論                                                            |
-| The Passionate Programmer, 2nd Edition                      | Chad Fowler                           | 2009              | 『情熱プログラマー』オーム社、2010                                                      | 11・12・14章 | 開発者のキャリアを自分で作る53の助言                                              |
-| The First 20 Hours                                          | Josh Kaufman                          | 2013              | 『たいていのことは20時間で習得できる』日経BP、2014                                      | 12章         | スキル獲得の最初の20時間の使い方                                                  |
-| Pragmatic Thinking and Learning                             | Andy Hunt                             | 2008              | 『リファクタリング・ウェットウェア』オライリー・ジャパン、2009                          | 12章         | 脳のしくみから見た学習法                                                          |
-| Developer Career マスタplan                                 | Heather VanCura、Bruno Souza          | 2023              | なし                                                                                    | 14章         | コミュニティ参加を軸にしたキャリア設計                                            |
-| The Manager's パス                                          | Camille Fournier                      | 2017              | 『エンジニアのためのマネジメントキャリアパス』オライリー・ジャパン、2018                | 14章         | テックリードから CTO までの各段階                                                 |
-| Developer, Advocate!                                        | Geertjan Wielenga                     | 2019              | なし                                                                                    | 14章         | デベロッパーアドボケイトへのインタビュー集                                        |
-| Help Your Boss Help You                                     | Ken Kousen                            | 2021              | なし                                                                                    | 14章         | 上司との関係を自分から作る                                                        |
-| Never Eat Alone                                             | Keith Ferrazzi、Tahl Raz              | 2014（初版 2005） | 2005年版の邦訳『一生モノの人脈力』パンローリング、2012                                  | 14章         | 人脈づくりの実用書                                                                |
-| AI Engineering                                              | Chip Huyen                            | 2024              | 『AIエンジニアリング』オライリー・ジャパン、2025                                        | 15章         | 基盤モデルを使うアプリケーション開発                                              |
-| Beyond Vibe Coding                                          | Addy Osmani                           | 2025              | 『バイブコーディングを超えて』オライリー・ジャパン、2025                                | 15章         | AI 支援開発とエンジニアの役割                                                     |
-| Prompt Engineering for LLMs                                 | John Berryman、Albert Ziegler         | 2024              | 『LLMのプロンプトエンジニアリング』オライリー・ジャパン、2025                           | 15章         | GitHub Copilot の開発者によるプロンプト設計                                       |
-| Rebooting AI                                                | Gary Marcus、Ernest Davis             | 2019              | なし                                                                                    | 15章         | 深層学習一辺倒への批判                                                            |
-| Co-Intelligence                                             | Ethan Mollick                         | 2024              | 『これからのAI、正しい付き合い方と使い方』KADOKAWA、2024                                | 15章         | AI と協働する4つの原則                                                            |
-| Human Compatible                                            | Stuart Russell                        | 2019              | 『AI新生』みすず書房、2021                                                              | 15章         | 人間と両立する AI の制御問題                                                      |
-| Artificial Intelligence: A Modern Approach, 4th Edition     | Stuart Russell、Peter Norvig          | 2020              | 第2版のみ『エージェントアプローチ人工知能 第2版』共立出版、2008                         | 15章         | AI の標準教科書                                                                   |
-| Deep Learning with Python, 2nd Edition                      | François Chollet                      | 2021              | 『Pythonによるディープラーニング』マイナビ出版、2022                                    | 15章         | Keras の作者による入門                                                            |
-| Taming Silicon Valley                                       | Gary Marcus                           | 2024              | 『AIテックを抑え込め！』日経BP、2025                                                    | 15章         | AI 企業への規制を論じる                                                           |
+### 1章 プログラマからエンジニアへ
 
-</details>
+- [The Pragmatic Programmer](https://www.informit.com/store/pragmatic-programmer-your-journey-to-mastery-20th-anniversary-9780135957059)（David Thomas、Andrew Hunt、20周年記念版 2019、初版 1999）  
+  邦訳：[達人プログラマー](https://www.ohmsha.co.jp/book/9784274226298/)（オーム社、第2版 2020）  
+  職業プログラマーの心構えと習慣を網羅した定番書（掲載章：1章・12章・14章）
 
-## どれから読むか
+- [The Mythical Man-Month](https://www.informit.com/store/mythical-man-month-essays-on-software-engineering-anniversary-9780201835953)（Fred Brooks、記念版 1995、初版 1975）  
+  邦訳：[人月の神話](https://www.maruzen-publishing.co.jp/book/b10111860.html)（丸善出版、新装版 2014）  
+  人と月を交換できるとみなす『人月』の考え方を幻想だと指摘し、大規模開発の困難さを説いたソフトウェア開発の名著（掲載章：1章・3章）
 
-表のままでは50冊近くあり、どこから手を付けるか決められません。そこで2つの軸で並べ直しました。
+- [Design Patterns](https://www.informit.com/store/design-patterns-elements-of-reusable-object-oriented-software-9780201633610)（Erich Gamma ほか、1994）  
+  邦訳：[オブジェクト指向における再利用のためのデザインパターン](https://www.sbcr.jp/product/4797311126/)（SBクリエイティブ、改訂版 1999）  
+  オブジェクト指向設計で繰り返し現れる23の設計パターンを体系化したデザインパターンの原典、通称 GoF 本
 
-縦の軸は話題で、本書の章をまとめたものです。コードを読む・書く・直す（2・3・5・6章）、図と設計（4・9章）、データ（8章）、本番環境とデリバリ（10章）、UI デザイン（7章）、学び方と働き方（11・12章）、キャリアと影響力（13・14章）、AI（15章）の8行です。
+- [Practices of an Agile Developer](https://pragprog.com/titles/pad/practices-of-an-agile-developer/)（Venkat Subramaniam、Andy Hunt、2006）  
+  邦訳：[アジャイルプラクティス](https://www.ohmsha.co.jp/book/9784274066948/)（オーム社、2007）  
+  アジャイルな開発者が日々実践したい45の習慣を悪い例と良い例の対比で紹介する実践書
 
-横の軸は読む時期です。「本書の直後に読む」には、本書と同じように広く浅く全体を見渡す本と、本書が複数の章で繰り返し挙げる本を置きました。「現場でその話題にあたったら読む」には、各話題の定番として深掘りに使える本を置きました。「視野を組織や歴史へ広げるときに読む」には、チームや組織の話、歴史的な古典、理論寄りの本を置きました。この振り分けは本書が示しているものではなく、本書の記述と私の経験から判断したものです。
+- [The Productive Programmer](https://www.oreilly.com/library/view/the-productive-programmer/9780596519780/)（Neal Ford、2008）  
+  邦訳：[プロダクティブ・プログラマ](https://www.oreilly.co.jp/books/9784873114026/)（オライリー・ジャパン、2009）  
+  コマンドライン、自動化、ショートカットなど、開発者個人の生産性を道具と習慣の両面から高める方法をまとめた本（掲載章：1章・11章）
 
-![章末の推薦書をいつ読むかで並べた読書マップ](./imgs/reading_map.drawio.svg)
+- [Software Engineering at Google](https://www.oreilly.com/library/view/software-engineering-at/9781492082781/)（Titus Winters ほか編、2020）  
+  邦訳：[Googleのソフトウェアエンジニアリング](https://www.oreilly.co.jp/books/9784873119656/)（オライリー・ジャパン、2021）  
+  Google がソフトウェアを長期にわたって維持するための文化、プロセス、ツールを解説した、大規模開発の実践知
 
-青い枠は邦訳がある本、黄色の枠は邦訳が旧版にしかない本、灰色の枠は原書しかない本です。表に挙げた本のうち、記事や講演に近い薄いもの、同じ著者の重複、本書の主題から遠いものは図から落としています。
+- [The Staff Engineer's Path](https://www.oreilly.com/library/view/the-staff-engineers/9781098118723/)（Tanya Reilly、2022）  
+  邦訳：[スタッフエンジニアの道](https://www.oreilly.co.jp/books/9784814400867/)（オライリー・ジャパン、2024）  
+  マネジメントに進まず技術職として上を目指すスタッフエンジニアの役割と、その仕事の進め方を解説したガイド
 
-図の読み方として、まず1列目を横に通して読むのが、本書の読者には合うと思います。『達人プログラマー』と『情熱プログラマー』は本書と同じ粒度で、本書が3つの章で挙げるだけの理由があります。そのあとは、現場で当たった話題の行を2列目へ進めば、本書の章がその本の要約として働きます。9章と『ソフトウェアアーキテクチャの基礎』、10章と『継続的デリバリー』はその典型です。3列目は急がなくてよい本で、肩書きや役割が変わったときに戻ってくれば十分だと考えています。
+- [Code Complete](https://www.informit.com/store/code-complete-9780735691254)（Steve McConnell、第2版 2004）  
+  邦訳：[CODE COMPLETE 上・下](https://bookplus.nikkei.com/atcl/catalog/05/589000/)（日経BP、第2版 2005）  
+  命名から設計、デバッグまで、コードを書く工程の実践を網羅したコーディングの古典的な教科書
+
+### 4章 モデル
+
+- [User Story Mapping](https://www.oreilly.com/library/view/user-story-mapping/9781491904893/)（Jeff Patton、2014）  
+  邦訳：[ユーザーストーリーマッピング](https://www.oreilly.co.jp/books/9784873117324/)（オライリー・ジャパン、2015）  
+  ユーザの行動に沿ってストーリーを地図のように並べ、何をどの順で作るかを決める手法を、提唱者自身が解説した定番書
+
+- [Communication Patterns](https://www.oreilly.com/library/view/communication-patterns/9781098140533/)（Jacqui Read、2023）  
+  邦訳：[開発者とアーキテクトのためのコミュニケーションガイド](https://www.oreilly.co.jp/books/9784814401055/)（オライリー・ジャパン、2025）  
+  図、文書、会話で技術的な内容を伝えるためのパターンとアンチパターンをまとめた本（掲載章：4章・9章）
+
+- [Creating Software with Modern Diagramming Techniques](https://pragprog.com/titles/apdiag/creating-software-with-modern-diagramming-techniques/)（Ashley Peacock、2023）  
+  邦訳：なし  
+  Mermaid などのツールで図をテキストとして書き、コードと一緒に管理する方法を解説した本（掲載章：4章・9章）
+
+- [UML Distilled](https://www.informit.com/store/uml-distilled-a-brief-guide-to-the-standard-object-modeling-language-3rd-edition-9780321193681)（Martin Fowler、第3版 2003）  
+  邦訳：[UMLモデリングのエッセンス](https://www.shoeisha.co.jp/book/detail/9784798107950)（翔泳社、第3版 2005）  
+  UML のうち実務でよく使う部分に絞って要点を解説した、薄くて読みやすい入門書（掲載章：4章・9章）
+
+### 5章 自動テスト
+
+- [Clean Code](https://www.informit.com/store/clean-code-a-handbook-of-agile-software-craftsmanship-9780132350884)（Robert C. Martin、2008）  
+  邦訳：[Clean Code](https://www.kadokawa.co.jp/product/301710000205/)（KADOKAWA、2017、初刊 2009）  
+  命名、関数、コメント、テストなど、読みやすく保守しやすいコードを書くための規律をまとめた定番書
+
+### 6章 初めて触れるシステムの調査と変更
+
+- [Refactoring](https://www.informit.com/store/refactoring-improving-the-design-of-existing-code-9780134757599)（Martin Fowler、第2版 2018）  
+  邦訳：[リファクタリング](https://www.ohmsha.co.jp/book/9784274224546/)（オーム社、第2版 2019）  
+  振る舞いを変えずにコードの構造を改善する手法を手順付きのカタログとしてまとめたリファクタリングの原典
+
+- [Working Effectively with Legacy Code](https://www.informit.com/store/working-effectively-with-legacy-code-9780131177055)（Michael Feathers、2004）  
+  邦訳：[レガシーコード改善ガイド](https://www.shoeisha.co.jp/book/detail/9784798116839)（翔泳社、2009）  
+  テストのない既存コードに安全に手を入れるため、依存を断ち切ってテストを追加する技法を解説した、レガシーコード対応の定番書
+
+- [Getting to Know IntelliJ IDEA](https://leanpub.com/gettingtoknowIntelliJIDEA)（Trisha Gee、Helen Scott、2022）  
+  邦訳：なし  
+  IntelliJ IDEA の機能と使いこなし方を、JetBrains のデベロッパーアドボケイト2人が体系的に解説した本
+
+### 7章 ユーザーインターフェース設計
+
+- [The Design of Everyday Things](https://www.hachettebookgroup.com/titles/don-norman/the-design-of-everyday-things/9780465050659/)（Don Norman、増補改訂版 2013、初版 1988）  
+  邦訳：[誰のためのデザイン？](https://www.shin-yo-sha.co.jp/book/b455574.html)（新曜社、増補・改訂版 2015）  
+  使いやすいデザインとは何かを、アフォーダンスなど認知科学の観点から論じたデザインの古典
+
+- [The Non-Designer's Design Book](https://www.peachpit.com/store/non-designers-design-book-9780133966350)（Robin Williams、第4版 2014）  
+  邦訳：[ノンデザイナーズ・デザインブック](https://book.mynavi.jp/ec/products/detail/id=53645)（マイナビ出版、第4版 2016）  
+  近接、整列、反復、コントラストの4原則で、デザインの専門家でなくても見やすいレイアウトを作る方法を解説した定番の入門書
+
+- [About Face](https://www.wiley.com/en-us/About+Face%3A+The+Essentials+of+Interaction+Design%2C+4th+Edition-p-9781118766576)（Alan Cooper ほか、第4版 2014）  
+  邦訳：[ABOUT FACE インタラクションデザインの本質](https://book.mynavi.jp/ec/products/detail/id=143962)（マイナビ出版、2024）  
+  ユーザのゴールを起点にインタラクションを設計する、ゴール指向設計を体系化した大著
+
+- [Designing Interfaces](https://www.oreilly.com/library/view/designing-interfaces-3rd/9781492051954/)（Jenifer Tidwell ほか、第3版 2019）  
+  邦訳：[デザイニング・インターフェース](https://www.oreilly.co.jp/books/9784873115313/)（オライリー・ジャパン、第2版 2011）  
+  ナビゲーションやフォームなど、UI 設計で繰り返し使われるパターンを集めたカタログ
+
+### 8章 データの取り扱い
+
+- [Designing Data-Intensive Applications](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/)（Martin Kleppmann、Chris Riccomini、第2版 2026）  
+  邦訳：[データ指向アプリケーションデザイン](https://www.oreilly.co.jp/books/9784873118703/)（オライリー・ジャパン、初版 2019）。[第2版](https://www.oreilly.co.jp/books/9784814401802/) は2026年11月刊行予定  
+  レプリケーション、パーティショニング、トランザクションなど、データを扱う分散システムの原理を解説した名著
+
+- [Seven Databases in Seven Weeks](https://pragprog.com/titles/pwrdata/seven-databases-in-seven-weeks-second-edition/)（Luc Perkins ほか、第2版 2018）  
+  邦訳：[7つのデータベース 7つの世界](https://www.ohmsha.co.jp/book/9784274069086/)（オーム社、初版 2013）  
+  リレーショナル、key-value、ドキュメント、グラフなど7種のデータベースを、実際に動かしながら比較する本
+
+- [Refactoring Databases](https://www.informit.com/store/refactoring-databases-evolutionary-database-design-9780321293534)（Scott Ambler、Pramod Sadalage、2006）  
+  邦訳：[データベース・リファクタリング](https://www.hanmoto.com/bd/isbn/9784894715004)（ピアソン・エデュケーション、2008）  
+  稼働中のデータベースのスキーマを、移行期間を設けながら段階的に変更する手法をカタログ化した本
+
+- [Fundamentals of Data Engineering](https://www.oreilly.com/library/view/fundamentals-of-data/9781098108298/)（Joe Reis、Matt Housley、2022）  
+  邦訳：[データエンジニアリングの基礎](https://www.oreilly.co.jp/books/9784814400652/)（オライリー・ジャパン、2024）  
+  データの生成から保存、変換、提供までのライフサイクル全体を見渡す、データエンジニアリングの入門書
+
+- [NoSQL Distilled](https://www.informit.com/store/nosql-distilled-a-brief-guide-to-the-emerging-world-of-9780321826626)（Pramod Sadalage、Martin Fowler、2012）  
+  邦訳：なし  
+  key-value、ドキュメント、カラムファミリー、グラフといった NoSQL データベースの分類と使い分けを短くまとめた入門書
+
+### 9章 ソフトウェアアーキテクチャ
+
+- [Thinking Architecturally](https://www.oreilly.com/library/view/thinking-architecturally/9781492034421/)（Nathaniel Schutta、2018）  
+  邦訳：なし  
+  本書の著者 Schutta による無料のレポート。次々に現れる新しい技術をどう評価し、どう取り入れるかを論じる（掲載章：9章・12章・13章）
+
+- [Head First Software Architecture](https://www.oreilly.com/library/view/head-first-software/9781098134341/)（Raju Gandhi、Mark Richards、Neal Ford、2024）  
+  邦訳：なし  
+  イラストやクイズを多用する Head First シリーズのソフトウェアアーキテクチャ入門書
+
+- [Fundamentals of Software Architecture](https://www.oreilly.com/library/view/fundamentals-of-software/9781492043447/)（Mark Richards、Neal Ford、2020）  
+  邦訳：[ソフトウェアアーキテクチャの基礎](https://www.oreilly.co.jp/books/9784873119823/)（オライリー・ジャパン、2022）。第2版の邦訳は 2026年3月  
+  アーキテクチャ特性の洗い出し、トレードオフ分析、主要なアーキテクチャスタイルを体系的に解説した入門書
+
+- [How to Win Friends and Influence People](https://www.simonandschuster.com/books/How-to-Win-Friends-and-Influence-People/Dale-Carnegie/9780671027032)（Dale Carnegie、1936）  
+  邦訳：[人を動かす](https://www.sogensha.co.jp/book/b10138632.html)（創元社、改訂新装版 2023）  
+  人に好かれ、人を動かすための原則をまとめた、対人関係の古典（掲載章：9章・13章）
+
+- [Building Evolutionary Architectures](https://www.oreilly.com/library/view/building-evolutionary-architectures/9781492097532/)（Neal Ford ほか、第2版 2022）  
+  邦訳：[進化的アーキテクチャ](https://www.oreilly.co.jp/books/9784873118567/)（オライリー・ジャパン、初版 2018）  
+  適応度関数でアーキテクチャ特性を継続的に検証し、変化に耐えるアーキテクチャを作る方法を解説した本
+
+- [Influence, New and Expanded](https://www.harpercollins.com/products/influence-new-and-expanded-robert-b-cialdini)（Robert Cialdini、2021）  
+  邦訳：[影響力の武器](https://www.seishinshobo.co.jp/book/b10033616.html)（誠信書房、新版 2023）  
+  返報性や社会的証明など、人が説得に応じる心理的な原理を解説した、説得の心理学の古典（掲載章：9章・13章）
+
+### 10章 本番環境へ
+
+- [Continuous Delivery](https://www.informit.com/store/continuous-delivery-reliable-software-releases-through-build-9780321601919)（Jez Humble、David Farley、2010）  
+  邦訳：[継続的デリバリー](https://www.kadokawa.co.jp/product/301706000296/)（KADOKAWA、2017、初刊 2012）  
+  ビルド、テスト、デプロイを自動化するパイプラインを体系化した、継続的デリバリの原典
+
+- [The Phoenix Project](https://itrevolution.com/product/the-phoenix-project/)（Gene Kim ほか、2013）  
+  邦訳：[The DevOps 逆転だ！](https://bookplus.nikkei.com/atcl/catalog/14/P85350/)（日経BP、2014）  
+  炎上中の IT 部門を舞台に、DevOps の考え方を小説仕立てで描いたベストセラー
+
+- [Head First Git](https://www.oreilly.com/library/view/head-first-git/9781492092506/)（Raju Gandhi、2022）  
+  邦訳：なし  
+  Git のしくみを図解とクイズで学ぶ、Head First シリーズの入門書
+
+- [Learning GitHub Actions](https://www.oreilly.com/library/view/learning-github-actions/9781098131067/)（Brent Laster、2023）  
+  邦訳：なし  
+  GitHub Actions でワークフローを組み、CI/CD を自動化する方法を解説した入門書
+
+- [Feature Flags](https://featureflagsbook.com/)（Ben Nadel、2024）  
+  邦訳：なし  
+  フィーチャーフラグの導入と運用に絞り、著者の実務経験をもとにまとめた自費出版の本
+
+### 11章 生産性を向上させる
+
+- [Flow](https://www.harpercollins.com/products/flow-mihaly-csikszentmihalyi)（Mihaly Csikszentmihalyi、1990）  
+  邦訳：[フロー体験 喜びの現象学](https://sekaishisosha.jp/book/b354747.html)（世界思想社、1996）  
+  時間を忘れて没頭する「フロー」状態を提唱した、心理学の古典
+
+- [Building a Second Brain](https://www.simonandschuster.com/books/Building-a-Second-Brain/Tiago-Forte/9781982167387)（Tiago Forte、2022）  
+  邦訳：[SECOND BRAIN](https://str.toyokeizai.net/books/9784492558218/)（東洋経済新報社、2023）  
+  デジタルのメモを整理して活用し、自分の外にもう1つの脳を作る、個人の知識管理の方法論
+
+- [The Passionate Programmer](https://pragprog.com/titles/cfcar2/the-passionate-programmer-2nd-edition/)（Chad Fowler、第2版 2009）  
+  邦訳：[情熱プログラマー](https://www.ohmsha.co.jp/book/9784274067938/)（オーム社、2010）  
+  開発者が自分のキャリアを主体的に築くための53の助言をまとめたエッセイ集（掲載章：11章・12章・14章）
+
+### 12章 学び方を学ぶ
+
+- [The First 20 Hours](https://www.penguinrandomhouse.com/books/312040/the-first-20-hours-by-josh-kaufman/)（Josh Kaufman、2013）  
+  邦訳：[たいていのことは20時間で習得できる](https://bookplus.nikkei.com/atcl/catalog/14/P50480/)（日経BP、2014）  
+  新しいスキルを最初の20時間で一定の水準まで身につけるための、練習の進め方を説いた本
+
+- [Pragmatic Thinking and Learning](https://pragprog.com/titles/ahptl/pragmatic-thinking-and-learning/)（Andy Hunt、2008）  
+  邦訳：[リファクタリング・ウェットウェア](https://www.oreilly.co.jp/books/9784873114033/)（オライリー・ジャパン、2009）  
+  脳のしくみや認知科学の知見をもとに、エンジニアの学習法と思考法を解説した本
+
+### 14章 キャリアマネジメント
+
+- [Developer Career Masterplan](https://www.packtpub.com/en-us/product/developer-career-masterplan-9781801818704)（Heather VanCura、Bruno Souza、2023）  
+  邦訳：なし  
+  コミュニティへの参加や情報発信を軸に、開発者がキャリアを伸ばす方法を解説した本
+
+- [The Manager's Path](https://www.oreilly.com/library/view/the-managers-path/9781491973882/)（Camille Fournier、2017）  
+  邦訳：[エンジニアのためのマネジメントキャリアパス](https://www.oreilly.co.jp/books/9784873118482/)（オライリー・ジャパン、2018）  
+  テックリードから CTO まで、エンジニアリングマネジメントの各段階で求められる役割を解説した定番書
+
+- [Developer, Advocate!](https://www.packtpub.com/en-us/product/developer-advocate-9781789130300)（Geertjan Wielenga、2019）  
+  邦訳：なし  
+  デベロッパーアドボケイトとして活躍する人たちへのインタビュー集
+
+- [Help Your Boss Help You](https://pragprog.com/titles/kkmanage/help-your-boss-help-you/)（Ken Kousen、2021）  
+  邦訳：なし  
+  上司との関係を自分から築き、うまく協力してもらうための方法を解説した本
+
+- [Never Eat Alone](https://www.penguinrandomhouse.com/books/227558/never-eat-alone-expanded-and-updated-by-keith-ferrazzi-and-tahl-raz/)（Keith Ferrazzi、Tahl Raz、2014、初版 2005）  
+  邦訳（2005年版）：[一生モノの人脈力](https://www.panrolling.com/books/ph/ph05.html)（パンローリング、2012）  
+  相手の役に立つことを起点に人脈を築く方法を説いた、人脈づくりの実用書
+
+### 15章 AI を駆使するソフトウェアエンジニア
+
+- [AI Engineering](https://www.oreilly.com/library/view/ai-engineering/9781098166298/)（Chip Huyen、2024）  
+  邦訳：[AIエンジニアリング](https://www.oreilly.co.jp/books/9784814401383/)（オライリー・ジャパン、2025）  
+  基盤モデルを使ったアプリケーションの開発、評価、運用を体系的に解説した本
+
+- [Beyond Vibe Coding](https://www.oreilly.com/library/view/beyond-vibe-coding/9798341634749/)（Addy Osmani、2025）  
+  邦訳：[バイブコーディングを超えて](https://www.oreilly.co.jp/books/9784814401420/)（オライリー・ジャパン、2025）  
+  AI を使ったコーディングの実践と、AI 時代のエンジニアの役割を論じた本
+
+- [Prompt Engineering for LLMs](https://www.oreilly.com/library/view/prompt-engineering-for/9781098156145/)（John Berryman、Albert Ziegler、2024）  
+  邦訳：[LLMのプロンプトエンジニアリング](https://www.oreilly.co.jp/books/9784814401130/)（オライリー・ジャパン、2025）  
+  GitHub Copilot の開発に携わった著者による、LLM を組み込んだアプリケーションのプロンプト設計の解説書
+
+- [Rebooting AI](https://www.penguinrandomhouse.com/books/603982/rebooting-ai-by-gary-marcus-and-ernest-davis/)（Gary Marcus、Ernest Davis、2019）  
+  邦訳：なし  
+  深層学習だけでは信頼できる AI は作れないと論じ、常識や推論の必要性を説いた本
+
+- [Co-Intelligence](https://www.penguinrandomhouse.com/books/741805/co-intelligence-by-ethan-mollick/)（Ethan Mollick、2024）  
+  邦訳：[これからのAI、正しい付き合い方と使い方](https://www.kadokawa.co.jp/product/322407001156/)（KADOKAWA、2024）  
+  AI を「共同知能」として扱い、仕事や学びで協働するための4つの原則を示した本
+
+- [Human Compatible](https://www.penguinrandomhouse.com/books/566677/human-compatible-by-stuart-russell/)（Stuart Russell、2019）  
+  邦訳：[AI新生](https://www.msz.co.jp/book/detail/08984/)（みすず書房、2021）  
+  人間の価値観と両立する AI をどう設計し、制御するかを論じた本
+
+- [Artificial Intelligence: A Modern Approach](https://www.pearson.com/en-us/subject-catalog/p/artificial-intelligence-a-modern-approach/P200000003500/9780137505135)（Stuart Russell、Peter Norvig、第4版 2020）  
+  邦訳：[エージェントアプローチ人工知能](https://www.kyoritsu-pub.co.jp/book/b10166403.html)（共立出版、原著第4版 2026）  
+  探索、推論、機械学習まで AI 全体を網羅した、世界中の大学で使われる AI の教科書
+
+- [Deep Learning with Python](https://www.manning.com/books/deep-learning-with-python-second-edition)（François Chollet、第2版 2021）  
+  邦訳：[Pythonによるディープラーニング](https://book.mynavi.jp/ec/products/detail/id=128583)（マイナビ出版、2022）  
+  Keras の作者自身による、Python で深層学習を実装しながら学ぶ入門書
+
+- [Taming Silicon Valley](https://mitpress.mit.edu/9780262551069/taming-silicon-valley/)（Gary Marcus、2024）  
+  邦訳：[AIテックを抑え込め！](https://bookplus.nikkei.com/atcl/catalog/25/10/08/02256/)（日経BP、2025）  
+  大手 AI 企業の問題点を指摘し、AI に必要な規制と市民の取り組みを論じた本
+
+<!-- textlint-enable -->
+
+## 読書マップ
+
+55冊を一覧で見てもどこから手をつければよいかわかりづらいため、独自に再カテゴライズし、初版の年代別に分類してみました。そのうえで、独断と偏見により「次の一歩としてお勧めする書籍（黄色）」と「さらに深く学ぶためにお勧めする書籍（紫色）」を色付けしています。すべての書籍を読んでいるわけではないので、あくまで私が手に取ったり読んだりしたことがある書籍の中からよさそうと判断したものに対して色付けしている点はご了承ください。
+
+![読書マップ](./imgs/reading_map.drawio.png)
+
+全体を俯瞰してみると、1990年代以前の古い書籍も多く含まれています。ただ、その多くは、コーディングや開発の原則のような、技術の流行の影響を受けにくいカテゴリの本です。反対に、DevOps と AI の書籍はほとんどが2010年代以降で、変化の速い分野ほど新しい本が挙がっています。トレンドの書籍を読むことはもちろん重要ですが、それと同じくらい古典的名著に触れることも私としてはお勧めしたいです。
 
 ## おわりに
 
-本書の各章は入門の深さで止まりますが、章末の Additional Resources をたどれば次の一冊が決まります。1章の演習が言うように、目次を眺めて弱い領域を選び、その章の推薦書へ進む。それをやりやすくするために、この記事の表と図を作りました。
+あらためて、『ソフトウェアエンジニアリングの基礎』は良書でした。現場に出たばかりの若手はもちろん、若手を育てる立場の人にもお勧めです。
 
-私自身がまず進むのは8章の行です。一貫性モデルとキャッシュ戦略を、本書の整理よりもう一段深く調べたいと思っています。
+読書マップに対するフィードバックもお待ちしています。次の1冊を選ぶ参考になれば幸いです。

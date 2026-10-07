@@ -423,7 +423,7 @@ rules:
   - expected: ください
     pattern: 下さい
   - expected: $1けっして
-    pattern: /([^解])決して|([^解])けして/
+    pattern: /([^解付])決して|([^解付])けして/
   - expected: こだわ$1
     pattern: /拘([らりるれろっ])/
   - expected: ことわざ
@@ -593,9 +593,8 @@ rules:
         to: 持てない
       - from: 消えてなくなる
         to: 消えてなくなる
-  # LOCAL: 持 added to the exclusion list so 持てる is left alone.
   - expected: $1ている
-    pattern: /([^捨当立持])てる/
+    pattern: /([^捨当立持育])てる/
   - expected: でき$1
     pattern: /出来([かがのをは過す損ずなまるたれてそ])/
   - expected: できあ
@@ -781,7 +780,6 @@ rules:
     pattern: やっぱり
   - expected: やみくも
     pattern: 闇雲
-  # LOCAL: exempt 体言止め / 用言止め, which are grammar terms, not "やめる".
   - expected: やめ
     pattern: /(?<!言)止め/
   - expected: やりとり
@@ -801,7 +799,7 @@ rules:
   - expected: わか$1
     pattern: /解([らりるれろっ])/
   - expected: のぶん$1
-    pattern: /の分([^散割類解野離析岐])/
+    pattern: /の分([^散割類解野離析岐量])/
   - expected: 気を遣
     pattern:
       - 気をつか

@@ -1,6 +1,8 @@
 plugins: {}
 
 filters:
+  # Allow <!-- textlint-disable rule --> ... <!-- textlint-enable rule --> for quoted proper nouns.
+  comments: true
   # Book titles in 『』 are proper nouns; exempt them from prh and punctuation rules.
   allowlist:
     allow:
