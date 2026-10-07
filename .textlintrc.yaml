@@ -1,6 +1,10 @@
 plugins: {}
 
-filters: {}
+filters:
+  # Book titles in 『』 are proper nouns; exempt them from prh and punctuation rules.
+  allowlist:
+    allow:
+      - "/『[^』]*』/"
 
 rules:
   # Detect phrasing that reads as AI-generated.

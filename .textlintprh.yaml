@@ -225,8 +225,9 @@ rules:
       - 一とおり
   - expected: 一度
     pattern: 1度
+  # LOCAL: do not touch ordinal uses such as 第1部.
   - expected: 一部
-    pattern: 1部
+    pattern: /(?<!第)1部/
   - expected: 一文
     pattern: 1文
   - expected: 一例
