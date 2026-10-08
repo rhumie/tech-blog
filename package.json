@@ -11,7 +11,7 @@
   "devDependencies": {
     "@textlint-ja/textlint-rule-preset-ai-writing": "1.7.0",
     "docsify-cli": "5.0.0",
-    "markdownlint-cli2": "0.23.2",
+    "markdownlint-cli2": "0.23.3",
     "markdownlint-cli2-formatter-pretty": "0.0.10",
     "textlint": "15.8.0",
     "textlint-filter-rule-allowlist": "4.0.0",
