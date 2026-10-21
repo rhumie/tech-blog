@@ -20,6 +20,7 @@ config:
     # Allowed elements.
     allowed_elements:
       - br
+      - img
       - details
       - summary
 
@@ -35,6 +36,7 @@ globs:
 # Glob expressions to ignore when linting
 ignores:
   - "**/node_modules/**"
+  - "docs/*/example/**/*.md"
 
 # Whether to disable the display of the banner message and version numbers on stdout
 noBanner: true

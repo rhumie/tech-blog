@@ -1,2 +1,5 @@
 # Skill and rule files quote the phrasing they warn against; they are not articles.
 .claude/**
+
+# Markdown under example/ is sample output, not article prose.
+docs/*/example/**/*.md

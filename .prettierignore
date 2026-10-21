@@ -1,0 +1,2 @@
+# Markdown under example/ is sample output, not article prose.
+docs/*/example/**/*.md
