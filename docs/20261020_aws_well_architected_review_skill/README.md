@@ -116,7 +116,29 @@ UI と 4 つのバックエンドサービス（Orders、Checkout、Cart、Catal
 
 ### score モード
 
-レポート全文：[score.md](https://github.com/rhumie/tech-blog/blob/main/docs/20261020_aws_well_architected_review_skill/example/output/score.md)
+<details>
+<summary>レポートの抜粋（全文は <a href="https://github.com/rhumie/tech-blog/blob/main/docs/20261020_aws_well_architected_review_skill/example/output/score.md" target="_blank" rel="noopener">こちら</a> から）</summary>
+
+```markdown
+## WA Score: retail-store-ecs
+
+> **Classification: CONFIDENTIAL** — セキュリティ上の指摘と未対処のギャップを含みます。配布は許可された担当者に限定し、承認なしに広く閲覧できるチャネルへ掲載しないでください。
+
+**Overall: 2.7/5**
+
+| Pillar                                       | Score | Critical | High | Medium | Low |
+| -------------------------------------------- | ----- | -------- | ---- | ------ | --- |
+| Operational excellence（運用上の優秀性）     | 3     | 0        | 1    | 2      | 1   |
+| Security（セキュリティ）                     | 2     | 0        | 2    | 7      | 1   |
+| Reliability（信頼性）                        | 2     | 0        | 3    | 1      | 1   |
+| Performance efficiency（パフォーマンス効率） | 3     | 0        | 0    | 0      | 2   |
+| Cost optimization（コスト最適化）            | 3     | 0        | 0    | 1      | 2   |
+| Sustainability（持続可能性）                 | 3     | 0        | 0    | 0      | 2   |
+
+評価条件: score モード（質問単位のクイックスキャン）、重要度 standard、レンズ General（フレームワーク本体の 6 柱のみ、追加レンズなし）。（中略）アカウント側の設定（CloudTrail、GuardDuty、Budgets、Service Quotas など）はコードから確認できないため、指摘は IaC に定義が無いという事実に限っています。
+```
+
+</details>
 
 スコア表と、1 件 1 行の指摘一覧だけのレポートです。指摘の根拠には、ファイルパスと行番号が並びます。たとえば High の 1 件は、Java のコントローラにある `/utility/panic`（GET 1 回でプロセスを終了させるエンドポイント）と、Terraform で UI が公開 ALB の後ろに 1 タスクだけ置かれていることを突き合わせ、「外部の誰でも 1 リクエストでサイト全体を停止できる」と指摘しています。レポートでは次のような 1 行です（長いので一部を略しています）。
 
@@ -130,7 +152,41 @@ UI と 4 つのバックエンドサービス（Orders、Checkout、Cart、Catal
 
 ### quick モード
 
-レポート全文：[quick.md](https://github.com/rhumie/tech-blog/blob/main/docs/20261020_aws_well_architected_review_skill/example/output/quick.md)
+<details>
+<summary>レポートの抜粋（全文は <a href="https://github.com/rhumie/tech-blog/blob/main/docs/20261020_aws_well_architected_review_skill/example/output/quick.md" target="_blank" rel="noopener">こちら</a> から）</summary>
+
+```markdown
+## Pillar Scorecard
+
+| 柱                     | スコア (1-5) | 評価した質問 | 主な強み                                                                                                     | 主なギャップ                                                                         |
+| ---------------------- | ------------ | ------------ | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------ |
+| Operational excellence | 2            | 11/11        | IaC で全体を構築。Container Insights（enhanced）が既定で有効。PR で lint とテストを実行                      | アラームがない。デプロイが手動。OTel が既定で無効                                    |
+| Security               | 2            | 11/11        | タスクはプライベートサブネットに配置。Secrets Manager で認証情報を注入。CI は OIDC。コンテナは非 root で実行 | 認証のない破壊的エンドポイント。HTTP のみで WAF なし。タスク SG が 0.0.0.0/0         |
+| Reliability            | 2            | 13/13        | 3 AZ の VPC。ALB とコンテナのヘルスチェック。Fargate による自己修復。カオス用フックと負荷テスト              | すべて単一インスタンス。バックアップが手薄。タイムアウトとサーキットブレーカーがない |
+| Performance efficiency | 3            | 5/5          | 用途別のデータストア（DynamoDB、Aurora、Redis、OpenSearch）を使い分け。マネージドサービス中心                | タスクサイズが固定。オートスケーリングがない                                         |
+| Cost optimization      | 2            | 11/11        | NAT を 1 つに抑えている。OpenSearch は Graviton（r8g）                                                       | 予算やコスト配分タグがない。Fargate が x86。サイズが過大の可能性                     |
+| Sustainability         | 3            | 6/6          | マネージドサービスを活用。arm64 イメージをすでにビルドしている                                               | 需要に合わせたスケーリングがない。ログ保持期限がない                                 |
+
+## Per-Question Assessment
+
+| ID    | 質問                     | 判定                  | リスク | 主な根拠                                                                                                                                                                     |
+| ----- | ------------------------ | --------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| OPS01 | 優先順位をどう決めるか   | Cannot Determine      | —      | 組織プロセスはコードから判断できない。ヒアリングが必要                                                                                                                       |
+| OPS02 | 組織構造                 | Cannot Determine      | —      | 同上                                                                                                                                                                         |
+| OPS03 | 組織文化                 | Cannot Determine      | —      | 同上（`CONTRIBUTING.md` があることは確認）                                                                                                                                   |
+| OPS04 | オブザーバビリティの実装 | Partially Implemented | Medium | Container Insights は既定で enhanced（`terraform/ecs/default/variables.tf:28-31`）。（中略）ログは構造化されていない                                                         |
+| OPS05 | 欠陥の削減と本番への流れ | Partially Implemented | Medium | PR で build/lint/test を実行（`.github/workflows/pr.yaml:49-57`）。（中略）ECS の Terraform の lint と integration は `exit 0`（`terraform/ecs/default/project.json:25-38`） |
+| OPS06 | デプロイリスクの軽減     | Partially Implemented | Medium | `wait_for_steady_state = true`（`terraform/lib/ecs/service/ecs.tf:143`）。デプロイサーキットブレーカー、自動ロールバック、Blue/Green がない                                  |
+| OPS07 | 運用準備の確認           | Cannot Determine      | —      | ランブックやプレイブックはリポジトリにない。運用体制のヒアリングが必要                                                                                                       |
+| OPS08 | オブザーバビリティの活用 | Not Implemented       | High   | `aws_cloudwatch_metric_alarm` やダッシュボードの定義がない（terraform 全体を grep して確認）                                                                                 |
+| OPS09 | 運用の健全性の把握       | Cannot Determine      | —      | 運用 KPI が定義されていない。ヒアリングが必要                                                                                                                                |
+| OPS10 | イベント管理             | Not Implemented       | High   | アラームと通知の経路（SNS など）がない。ライフサイクルイベントの転送は既定で無効（`terraform/ecs/default/variables.tf:38-46`）                                               |
+| OPS11 | 運用の進化               | Cannot Determine      | —      | 振り返りのプロセスはコードから判断できない                                                                                                                                   |
+
+（以降、SEC01〜SUS06 が続く）
+```
+
+</details>
 
 57 問の評価表と、柱ごとのスコア、強み、ギャップが付くレポートです。57 問のうち 14 問は Cannot Determine で、組織構造や組織文化、インシデント対応のように、コードを読んでも分からない質問がそのまま「分からない」として残っています。
 
@@ -146,7 +202,55 @@ score モードと同じく、`/utility/panic` を High の筆頭に挙げてい
 
 ### full モード
 
-レポート全文：[full.md](https://github.com/rhumie/tech-blog/blob/main/docs/20261020_aws_well_architected_review_skill/example/output/full.md)
+<details>
+<summary>レポートの抜粋（全文は <a href="https://github.com/rhumie/tech-blog/blob/main/docs/20261020_aws_well_architected_review_skill/example/output/full.md" target="_blank" rel="noopener">こちら</a> から）</summary>
+
+````markdown
+## Full BP Ledger (MANDATORY)
+
+各柱の評価表を、柱順・BP ID 順に連結した全 307 行の台帳である（マニフェストの 307 件と一致）。
+
+| BP ID      | 柱             | 状態             | リスク | 根拠                                                                                            | 推奨事項                               |
+| ---------- | -------------- | ---------------- | ------ | ----------------------------------------------------------------------------------------------- | -------------------------------------- |
+| OPS01-BP01 | 運用上の優秀性 | Cannot Determine |        | 外部顧客ニーズの評価はコード外                                                                  | ヒアリングで確認                       |
+| OPS01-BP02 | 運用上の優秀性 | Cannot Determine |        | 内部顧客ニーズの評価はコード外                                                                  | ヒアリングで確認                       |
+| OPS01-BP03 | 運用上の優秀性 | Cannot Determine |        | ガバナンス要件の記録なし                                                                        | ヒアリングで確認                       |
+| OPS01-BP04 | 運用上の優秀性 | Not Implemented  | Medium | 決済フォーム・個人情報を扱うが、コンプライアンス要件（PCI DSS、個人情報保護法等）の評価記録なし | 適用規制を特定し、要件を設計に反映する |
+| OPS01-BP05 | 運用上の優秀性 | Not Implemented  | Low    | 脅威状況の評価なし（SEC01-BP07 と同根）                                                         | 脅威モデリングを実施する               |
+| OPS01-BP06 | 運用上の優秀性 | Not Implemented  | Low    | 単一 NAT・単一インスタンス等のトレードオフ判断の記録なし                                        | ADR として記録する                     |
+
+（中略）
+
+## Prioritize Improvements — Eisenhower Matrix
+
+最もビジネスへの効果が大きく、実装しやすい少数の課題に絞って着手し、反復する。
+
+```
+        HIGH IMPORTANCE
+             │
+   ┌─────────┼─────────┐
+   │  DO     │  PLAN   │
+   │  FIRST  │         │
+   │         │         │
+───┼─────────┼─────────┼───
+   │         │         │
+   │DELEGATE │  DEFER  │
+   │         │         │
+   └─────────┼─────────┘
+             │
+        LOW IMPORTANCE
+   LOW EFFORT    HIGH EFFORT
+```
+
+| 象限                             | アクション                       | 指摘                                                                                                                                                                                                                 |
+| -------------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Do First**（重要度高・工数小） | 直ちに実施                       | C-1（WAF によるパス遮断とエンドポイント無効化）、H-1（ALB の HTTPS 化と Cookie 属性）、H-2（WAF マネージドルール）、H-3（アラームと通知）、M-3（サーキットブレーカー）、M-4（IAM 最小権限）、M-7（タスク SG の限定） |
+| **Plan**（重要度高・工数大）     | ロードマップに組み、段階的に実施 | H-1（ElastiCache の TLS 化。再作成を伴う）、H-4（単一障害点の解消）、M-1（Auto Scaling とサイジング）、（中略）、M-15（負荷試験）                                                                                    |
+| **Delegate**（重要度低・工数小） | まとめて担当者に割り当て         | M-6（保存時暗号化の残り）、M-13（Budgets・異常検知）、L-1、L-2、L-3、L-4、L-5、L-6、L-8                                                                                                                              |
+| **Defer**（重要度低・工数大）    | 次の反復で再検討                 | L-7（Graviton 移行）、L-9（MQ の縮小・置換）、L-10（カオス実験・ゲームデイ）、L-11（ランブック体系）、L-12（インシデント演習）                                                                                       |
+````
+
+</details>
 
 307 件すべてのベストプラクティスの判定一覧を含むレポートです。Cannot Determine は 62 件で、quick モードの 14 問から増えました。質問単位では 1 問だったものが、ベストプラクティス単位では数件に分かれるからです。
 

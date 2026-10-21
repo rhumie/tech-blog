@@ -21,6 +21,7 @@ config:
     allowed_elements:
       - br
       - img
+      - a
       - details
       - summary
 
