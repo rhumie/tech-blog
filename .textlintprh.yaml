@@ -799,7 +799,7 @@ rules:
   - expected: わか$1
     pattern: /解([らりるれろっ])/
   - expected: のぶん$1
-    pattern: /の分([^散割類解野離析岐量])/
+    pattern: /の分([^散割類解野離析岐量担])/
   - expected: 気を遣
     pattern:
       - 気をつか
@@ -999,12 +999,14 @@ rules:
   - expected: 少し
     pattern: すこし
   - expected: 少な
-    pattern: /すくな(?!り|る)/
+    pattern: /(?<!や)すくな(?!り|る)/
     specs:
       - from: すくなく
         to: 少なく
       - from: わかりやすくなり
         to: わかりやすくなり
+      - from: 実践しやすくなった
+        to: 実践しやすくなった
   - expected: 少ない
     pattern: 少い
   - expected: 起こし
@@ -1050,14 +1052,21 @@ rules:
     pattern: さきほど|先程
   - expected: 本誌
     pattern: 本紙
-  - expected: 基づ$1
-    pattern: /基([いかきくけこ])|基ず([いかきくけこ])|もとず([いかきくけこ])|もとづ([いかきくけこ])/
+  - expected: もとづ$1
+    pattern: /(?:基づ|基ず|基|もとず)([いかきくけこ])/
+    specs:
+      - from: 基づく
+        to: もとづく
+      - from: 基ずく
+        to: もとづく
+      - from: もとづく
+        to: もとづく
   - expected: もともと
     pattern:
       - 元々
       - 本々
   - expected: もと$1
-    pattern: /基([^数準盤板底礎本])/
+    pattern: /基([^数準盤板底礎本づ])/
   - expected: $1および
     pattern: /([^追])及び/
   - expected: したうえ
@@ -1479,7 +1488,7 @@ rules:
   - expected: 与え$1
     pattern: /あたえ([たつてらりるれろっ])/
   - expected: 進$1
-    pattern: /すす([まみむめもん])/
+    pattern: /すす([まみむもん]|め[たてなよらりるれろまっ])/
   - expected: 焦点を当て
     pattern: 焦点をあて
   - expected: 思$1
@@ -3033,7 +3042,7 @@ rules:
   - expected: する
     pattern: /するする/
   - expected: て
-    pattern: /(当)?てて/
+    pattern: /(当|立)?てて/
     regexpMustEmpty: $1
   # LOCAL: narrowed. This catches an accidentally doubled で; 「〜でできる」 is a
   # legitimate form and must not be rewritten.
